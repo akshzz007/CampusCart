@@ -1,240 +1,507 @@
 import { Link, useNavigate } from "react-router-dom";
+
 import { useState } from "react";
+
 import { Eye, EyeOff } from "lucide-react";
+
+import { FcGoogle } from "react-icons/fc";
+
 import axios from "axios";
+
 import { useAuth } from "../../context/AuthContext";
 
+import {
+
+signInWithPopup,
+
+GoogleAuthProvider,
+
+} from "firebase/auth";
+
+import { auth } from "../../firebase";
+
 const Login = () => {
-  const navigate = useNavigate();
 
-  const { login, setGuest } =
-    useAuth();
+const navigate =
 
-  const [showPassword, setShowPassword] =
-    useState(false);
+useNavigate();
 
-  const [email, setEmail] =
-    useState("");
+const {
 
-  const [password, setPassword] =
-    useState("");
+login,
 
-  const [rememberMe, setRememberMe] =
-    useState(true);
+setGuest,
 
-  const [loading, setLoading] =
-    useState(false);
+}=useAuth();
 
-  const handleLogin = async () => {
-    try {
-      if (!email || !password) {
-        alert(
-          "Please enter email and password"
-        );
-        return;
-      }
+const [
 
-      setLoading(true);
+showPassword,
 
-      const response =
-        await axios.post(
-          "http://localhost:5000/api/auth/login",
-          {
-            email,
-            password,
-          }
-        );
+setShowPassword,
 
-      login(
-        response.data.user,
-        response.data.token
-      );
+]=useState(false);
 
-      alert(
-        "Login Successful 🚀"
-      );
+const [
 
-      navigate("/");
-    } catch (error: any) {
-      console.log(error);
+email,
 
-      alert(
-        error.response?.data
-          ?.message ||
-          "Invalid Credentials"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+setEmail,
 
-  const handleGuest = () => {
-    setGuest(true);
-    navigate("/");
-  };
+]=useState("");
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 flex items-center justify-center p-6">
+const [
 
-      <div className="w-full max-w-6xl bg-white rounded-[40px] overflow-hidden shadow-2xl grid md:grid-cols-2">
+password,
 
-        {/* LEFT */}
+setPassword,
 
-        <div className="bg-gradient-to-br from-blue-600 to-cyan-600 text-white p-12 flex flex-col justify-center">
+]=useState("");
 
-          <h1 className="text-6xl font-extrabold mb-6">
-            CampusCart
-          </h1>
+const [
 
-          <h2 className="text-4xl font-bold mb-6">
-            Buy, Sell & Connect Within Your Campus
-          </h2>
+rememberMe,
 
-          <p className="text-lg text-blue-100">
-            Buy, sell and exchange products safely
-            within verified college communities.
-          </p>
+setRememberMe,
 
-          <div className="grid grid-cols-2 gap-4 mt-10">
+]=useState(true);
 
-            <div className="bg-white/10 rounded-3xl p-6">
-              <h3 className="text-4xl font-bold">
-                50K+
-              </h3>
-              <p>Students</p>
-            </div>
+const [
 
-            <div className="bg-white/10 rounded-3xl p-6">
-              <h3 className="text-4xl font-bold">
-                120+
-              </h3>
-              <p>Campuses</p>
-            </div>
+loading,
 
-          </div>
+setLoading,
 
-        </div>
+]=useState(false);
 
-        {/* RIGHT */}
+/* NORMAL LOGIN */
 
-        <div className="p-10 md:p-14 flex items-center">
+const handleLogin=
 
-          <div className="w-full">
+async()=>{
 
-            <h2 className="text-4xl font-bold mb-2">
-              Welcome Back 👋
-            </h2>
+try{
 
-            <p className="text-gray-500 mb-8">
-              Login with your college email
-            </p>
+if(
 
-            <div className="space-y-5">
+!email ||
 
-              <input
-                type="email"
-                placeholder="University Email"
-                value={email}
-                onChange={(e) =>
-                  setEmail(
-                    e.target.value
-                  )
-                }
-                className="w-full p-4 rounded-2xl border focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+!password
 
-              <div className="relative">
+){
 
-                <input
-                  type={
-                    showPassword
-                      ? "text"
-                      : "password"
-                  }
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) =>
-                    setPassword(
-                      e.target.value
-                    )
-                  }
-                  className="w-full p-4 rounded-2xl border focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+alert(
 
-                <button
-                  type="button"
-                  onClick={() =>
-                    setShowPassword(
-                      !showPassword
-                    )
-                  }
-                  className="absolute right-5 top-5"
-                >
-                  {showPassword ? (
-                    <EyeOff size={20} />
-                  ) : (
-                    <Eye size={20} />
-                  )}
-                </button>
+"Please enter email and password"
 
-              </div>
+);
 
-              <label className="flex items-center gap-2 text-sm text-gray-600">
+return;
 
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={() =>
-                    setRememberMe(
-                      !rememberMe
-                    )
-                  }
-                />
+}
 
-                Remember Me
+setLoading(true);
 
-              </label>
+const response=
 
-              <button
-                onClick={handleLogin}
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-2xl font-semibold text-lg disabled:opacity-60"
-              >
-                {loading
-                  ? "Logging In..."
-                  : "Login"}
-              </button>
+await axios.post(
 
-              <button
-                onClick={handleGuest}
-                className="w-full border py-4 rounded-2xl font-semibold hover:bg-gray-50"
-              >
-                Continue as Guest
-              </button>
+"http://localhost:5000/api/auth/login",
 
-            </div>
+{
 
-            <p className="text-center mt-8 text-gray-500">
+email,
 
-              Don't have an account?{" "}
+password,
 
-              <Link
-                to="/signup"
-                className="text-blue-600 font-semibold"
-              >
-                Create Account
-              </Link>
+}
 
-            </p>
+);
 
-          </div>
+login(
 
-        </div>
+response.data.user,
 
-      </div>
+response.data.token
 
-    </div>
-  );
+);
+
+alert(
+
+"Login Successful 🚀"
+
+);
+
+navigate("/");
+
+}
+
+catch(error:any){
+
+console.log(error);
+
+alert(
+
+error.response?.data?.message ||
+
+"Invalid Credentials"
+
+);
+
+}
+
+finally{
+
+setLoading(false);
+
+}
+
+};
+
+/* GOOGLE LOGIN */
+
+const handleGoogleLogin=
+
+async()=>{
+
+try{
+
+const provider=
+
+new GoogleAuthProvider();
+
+const result=
+
+await signInWithPopup(
+
+auth,
+
+provider
+
+);
+
+const user={
+
+_id:
+
+result.user.uid,
+
+name:
+
+result.user.displayName ||
+
+"User",
+
+email:
+
+result.user.email ||
+
+"",
+
+college:
+
+"CampusCart",
+
+campus:
+
+"CampusCart",
+
+role:
+
+"Buyer",
+
+isVerified:true,
+
+};
+
+login(
+
+user,
+
+result.user.accessToken
+
+);
+
+alert(
+
+"Google Login Successful 🚀"
+
+);
+
+navigate("/");
+
+}
+
+catch(error){
+
+console.log(error);
+
+alert(
+
+"Google Login Failed"
+
+);
+
+}
+
+};
+
+const handleGuest=()=>{
+
+setGuest(true);
+
+navigate("/");
+
+};
+
+return(
+
+<div className="min-h-screen bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 flex items-center justify-center p-6">
+
+<div className="w-full max-w-6xl bg-white rounded-[40px] overflow-hidden shadow-2xl grid md:grid-cols-2">
+
+{/* LEFT */}
+
+<div className="bg-gradient-to-br from-blue-600 to-cyan-600 text-white p-12 flex flex-col justify-center">
+
+<h1 className="text-6xl font-extrabold mb-6">
+
+CampusCart
+
+</h1>
+
+<h2 className="text-4xl font-bold mb-6">
+
+Buy, Sell & Connect Within Your Campus
+
+</h2>
+
+<p className="text-lg text-blue-100">
+
+Buy, sell and exchange products safely within verified college communities.
+
+</p>
+
+</div>
+
+{/* RIGHT */}
+
+<div className="p-10 md:p-14 flex items-center">
+
+<div className="w-full">
+
+<h2 className="text-4xl font-bold mb-2">
+
+Welcome Back 👋
+
+</h2>
+
+<p className="text-gray-500 mb-8">
+
+Login with your account
+
+</p>
+
+<div className="space-y-5">
+
+<input
+
+type="email"
+
+placeholder="University Email"
+
+value={email}
+
+onChange={(e)=>
+
+setEmail(
+
+e.target.value
+
+)
+
+}
+
+className="w-full p-4 rounded-2xl border"
+
+/>
+
+<div className="relative">
+
+<input
+
+type={
+
+showPassword
+
+? "text"
+
+: "password"
+
+}
+
+placeholder="Password"
+
+value={password}
+
+onChange={(e)=>
+
+setPassword(
+
+e.target.value
+
+)
+
+}
+
+className="w-full p-4 rounded-2xl border"
+
+/>
+
+<button
+
+type="button"
+
+onClick={()=>
+
+setShowPassword(
+
+!showPassword
+
+)
+
+}
+
+className="absolute right-5 top-5"
+
+>
+
+{
+
+showPassword
+
+?
+
+<EyeOff size={20}/>
+
+:
+
+<Eye size={20}/>
+
+}
+
+</button>
+
+</div>
+
+<label className="flex items-center gap-2 text-sm text-gray-600">
+
+<input
+
+type="checkbox"
+
+checked={rememberMe}
+
+onChange={()=>
+
+setRememberMe(
+
+!rememberMe
+
+)
+
+}
+
+/>
+
+Remember Me
+
+</label>
+
+<button
+
+onClick={handleLogin}
+
+disabled={loading}
+
+className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-2xl font-semibold"
+
+>
+
+{
+
+loading
+
+?
+
+"Logging In..."
+
+:
+
+"Login"
+
+}
+
+</button>
+
+<button
+
+onClick={handleGoogleLogin}
+
+className="w-full border py-4 rounded-2xl flex items-center justify-center gap-3 font-semibold hover:bg-gray-50"
+
+>
+
+<FcGoogle size={24}/>
+
+Continue with Google
+
+</button>
+
+<button
+
+onClick={handleGuest}
+
+className="w-full border py-4 rounded-2xl font-semibold"
+
+>
+
+Continue as Guest
+
+</button>
+
+</div>
+
+<p className="text-center mt-8 text-gray-500">
+
+Don't have an account?
+
+{" "}
+
+<Link
+
+to="/signup"
+
+className="text-blue-600 font-semibold"
+
+>
+
+Create Account
+
+</Link>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+);
+
 };
 
 export default Login;

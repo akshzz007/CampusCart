@@ -247,3 +247,136 @@ export const getMe = async (
     });
   }
 };
+export const googleAuth = async (
+
+req,
+
+res
+
+)=>{
+
+try{
+
+const {
+
+name,
+
+email,
+
+role,
+
+}=req.body;
+
+/* FIND USER */
+
+let user = await User.findOne({
+
+email,
+
+});
+
+/* CREATE USER */
+
+if(!user){
+
+const hashedPassword =
+
+await bcrypt.hash(
+
+"GOOGLE_AUTH",
+
+10
+
+);
+
+user = await User.create({
+
+name,
+
+email,
+
+password:
+
+hashedPassword,
+
+college:
+
+"CampusCart",
+
+campus:
+
+"CampusCart",
+
+role:
+
+role || "Buyer",
+
+isVerified:true,
+
+});
+
+}
+
+/* TOKEN */
+
+const token = jwt.sign(
+
+{
+
+id:user._id,
+
+},
+
+process.env.JWT_SECRET,
+
+{
+
+expiresIn:"7d",
+
+}
+
+);
+
+/* REMOVE PASSWORD */
+
+const userData =
+
+user.toObject();
+
+delete userData.password;
+
+res.status(200).json({
+
+success:true,
+
+token,
+
+user:userData,
+
+});
+
+}
+
+catch(error){
+
+console.log(
+
+"GOOGLE AUTH ERROR:",
+
+error
+
+);
+
+res.status(500).json({
+
+success:false,
+
+message:
+
+error.message,
+
+});
+
+}
+
+};

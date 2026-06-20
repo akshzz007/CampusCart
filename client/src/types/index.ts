@@ -1,4 +1,4 @@
-// src/types/index.ts
+// client/src/types/index.ts
 
 export interface User {
 
@@ -114,6 +114,14 @@ export interface Product {
 
   isSold?: boolean;
 
+  /* NEW */
+
+  rating?: number;
+
+  negotiable?: boolean;
+
+  isFeatured?: boolean;
+
   createdAt: string;
 
 }
@@ -131,6 +139,10 @@ export interface ChatMessage {
   text: string;
 
   createdAt: string;
+
+  isDelivered?: boolean;
+
+  isRead?: boolean;
 
 }
 

@@ -10,9 +10,14 @@ import type { User } from "../types";
 
 interface AuthContextType {
   user: User | null;
+
   token: string | null;
+
   isAuthenticated: boolean;
+
   loading: boolean;
+
+  isGuest: boolean;
 
   login: (
     userData: User,
@@ -20,8 +25,6 @@ interface AuthContextType {
   ) => void;
 
   logout: () => void;
-
-  isGuest: boolean;
 
   setGuest: (
     value: boolean
@@ -102,6 +105,7 @@ export const AuthProvider = ({
 
     localStorage.setItem(
       "campuscart-user",
+
       JSON.stringify(userData)
     );
 
@@ -112,7 +116,9 @@ export const AuthProvider = ({
 
   const logout = () => {
     setUser(null);
+
     setToken(null);
+
     setIsGuest(false);
 
     localStorage.removeItem(
@@ -136,6 +142,7 @@ export const AuthProvider = ({
     if (value) {
       localStorage.setItem(
         "campuscart-guest",
+
         "true"
       );
     } else {
@@ -149,15 +156,24 @@ export const AuthProvider = ({
     <AuthContext.Provider
       value={{
         user,
+
         token,
+
         loading,
-        isAuthenticated:
-          !!user || isGuest,
-        login,
-        logout,
+
         isGuest,
+
+        login,
+
+        logout,
+
         setGuest:
           handleGuest,
+
+        // 👇 IMPORTANT CHANGE
+
+        isAuthenticated:
+          !!user && !isGuest,
       }}
     >
       {children}

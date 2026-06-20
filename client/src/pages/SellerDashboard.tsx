@@ -1,304 +1,374 @@
-import { useEffect, useState } from "react";
+import {
+
+useEffect,
+
+useState,
+
+} from "react";
 
 import axios from "axios";
 
 import {
 
-  Package,
+Package,
 
-  IndianRupee,
+IndianRupee,
 
-  ShoppingBag,
+ShoppingBag,
 
-  Eye,
+Eye,
+
+TrendingUp,
 
 } from "lucide-react";
 
 const SellerDashboard = () => {
 
-  const [stats, setStats] =
+const [loading,setLoading] =
 
-    useState({
+useState(true);
 
-      totalListings: 0,
+const [stats,setStats] =
 
-      activeProducts: 0,
+useState({
 
-      soldProducts: 0,
+totalListings:0,
 
-      totalRevenue: 0,
+activeProducts:0,
 
-      totalViews: 0,
+soldProducts:0,
 
-    });
+totalRevenue:0,
 
-  useEffect(() => {
+totalViews:0,
 
-    fetchStats();
+});
 
-  }, []);
+useEffect(()=>{
 
-  const fetchStats = async () => {
+fetchStats();
 
-    try {
+},[]);
 
-      const token =
+const fetchStats = async()=>{
 
-        localStorage.getItem(
+try{
 
-          "token"
+const token=
 
-        );
+localStorage.getItem(
 
-      const { data } =
+"token"
 
-        await axios.get(
+);
 
-          "http://localhost:5000/api/products/seller/stats",
+const { data }=
 
-          {
+await axios.get(
 
-            headers: {
+"http://localhost:5000/api/products/seller/stats",
 
-              Authorization:
+{
 
-                `Bearer ${token}`,
+headers:{
 
-            },
+Authorization:
 
-          }
+`Bearer ${token}`,
 
-        );
+},
 
-      setStats(data);
+}
 
-    } catch (error) {
+);
 
-      console.log(error);
+setStats({
 
-    }
+totalListings:
 
-  };
+data.totalListings || 0,
 
-  return (
+activeProducts:
 
-    <div className="min-h-screen bg-gray-50">
+data.activeProducts || 0,
 
-      <div className="max-w-7xl mx-auto px-6 py-10">
+soldProducts:
 
-        {/* HEADER */}
+data.soldProducts || 0,
 
-        <div className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white rounded-3xl p-10 shadow-xl mb-10">
+totalRevenue:
 
-          <h1 className="text-5xl font-bold">
+data.totalRevenue || 0,
 
-            Seller Dashboard 📈
+totalViews:
 
-          </h1>
+data.totalViews || 0,
 
-          <p className="mt-3 text-lg text-blue-100">
+});
 
-            Track your listings,
+}
 
-            sales and performance.
+catch(error){
 
-          </p>
+console.log(error);
 
-        </div>
+}
 
-        {/* STATS */}
+finally{
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
+setLoading(false);
 
-          <div className="bg-white rounded-3xl p-6 shadow">
+}
 
-            <Package
+};
 
-              size={38}
+if(loading){
 
-              className="text-blue-600"
+return(
 
-            />
+<div className="min-h-screen flex items-center justify-center text-2xl font-bold">
 
-            <h2 className="text-4xl font-bold mt-4">
+Loading Dashboard...
 
-              {stats.totalListings}
+</div>
 
-            </h2>
+);
 
-            <p className="text-gray-500 mt-2">
+}
 
-              Total Listings
+return(
 
-            </p>
+<div className="min-h-screen bg-gray-50">
 
-          </div>
+<div className="max-w-7xl mx-auto px-6 py-10">
 
-          <div className="bg-white rounded-3xl p-6 shadow">
+{/* HEADER */}
 
-            <Package
+<div className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white rounded-3xl p-10 shadow-xl mb-10">
 
-              size={38}
+<h1 className="text-5xl font-bold">
 
-              className="text-green-600"
+Seller Dashboard 📈
 
-            />
+</h1>
 
-            <h2 className="text-4xl font-bold mt-4">
+<p className="mt-3 text-lg text-blue-100">
 
-              {stats.activeProducts}
+Track your listings, sales and performance.
 
-            </h2>
+</p>
 
-            <p className="text-gray-500 mt-2">
+</div>
 
-              Active Products
+{/* STATS */}
 
-            </p>
+<div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
 
-          </div>
+<div className="bg-white rounded-3xl p-6 shadow">
 
-          <div className="bg-white rounded-3xl p-6 shadow">
+<Package
 
-            <ShoppingBag
+size={38}
 
-              size={38}
+className="text-blue-600"
 
-              className="text-purple-600"
+/>
 
-            />
+<h2 className="text-4xl font-bold mt-4">
 
-            <h2 className="text-4xl font-bold mt-4">
+{stats.totalListings}
 
-              {stats.soldProducts}
+</h2>
 
-            </h2>
+<p className="text-gray-500 mt-2">
 
-            <p className="text-gray-500 mt-2">
+Total Listings
 
-              Sold Products
+</p>
 
-            </p>
+</div>
 
-          </div>
+<div className="bg-white rounded-3xl p-6 shadow">
 
-          <div className="bg-white rounded-3xl p-6 shadow">
+<Package
 
-            <IndianRupee
+size={38}
 
-              size={38}
+className="text-green-600"
 
-              className="text-emerald-600"
+/>
 
-            />
+<h2 className="text-4xl font-bold mt-4">
 
-            <h2 className="text-4xl font-bold mt-4">
+{stats.activeProducts}
 
-              ₹{stats.totalRevenue.toLocaleString()}
+</h2>
 
-            </h2>
+<p className="text-gray-500 mt-2">
 
-            <p className="text-gray-500 mt-2">
+Active Products
 
-              Revenue
+</p>
 
-            </p>
+</div>
 
-          </div>
+<div className="bg-white rounded-3xl p-6 shadow">
 
-          <div className="bg-white rounded-3xl p-6 shadow">
+<ShoppingBag
 
-            <Eye
+size={38}
 
-              size={38}
+className="text-purple-600"
 
-              className="text-orange-500"
+/>
 
-            />
+<h2 className="text-4xl font-bold mt-4">
 
-            <h2 className="text-4xl font-bold mt-4">
+{stats.soldProducts}
 
-              {stats.totalViews}
+</h2>
 
-            </h2>
+<p className="text-gray-500 mt-2">
 
-            <p className="text-gray-500 mt-2">
+Sold Products
 
-              Total Views
+</p>
 
-            </p>
+</div>
 
-          </div>
+<div className="bg-white rounded-3xl p-6 shadow">
 
-        </div>
+<IndianRupee
 
-        {/* QUICK INSIGHTS */}
+size={38}
 
-        <div className="grid md:grid-cols-3 gap-6 mt-10">
+className="text-emerald-600"
 
-          <div className="bg-white rounded-3xl p-8 shadow">
+/>
 
-            <h3 className="text-2xl font-bold">
+<h2 className="text-4xl font-bold mt-4 text-green-600">
 
-              🚀 Growth
+₹{stats.totalRevenue.toLocaleString()}
 
-            </h3>
+</h2>
 
-            <p className="text-gray-500 mt-4">
+<p className="text-gray-500 mt-2">
 
-              Keep adding products
+Revenue
 
-              regularly to increase
+</p>
 
-              visibility.
+</div>
 
-            </p>
+<div className="bg-white rounded-3xl p-6 shadow">
 
-          </div>
+<Eye
 
-          <div className="bg-white rounded-3xl p-8 shadow">
+size={38}
 
-            <h3 className="text-2xl font-bold">
+className="text-orange-500"
 
-              💰 Revenue
+/>
 
-            </h3>
+<h2 className="text-4xl font-bold mt-4">
 
-            <p className="text-gray-500 mt-4">
+{stats.totalViews}
 
-              Track how much money
+</h2>
 
-              you've earned.
+<p className="text-gray-500 mt-2">
 
-            </p>
+Total Views
 
-          </div>
+</p>
 
-          <div className="bg-white rounded-3xl p-8 shadow">
+</div>
 
-            <h3 className="text-2xl font-bold">
+</div>
 
-              👀 Reach
+{/* QUICK INSIGHTS */}
 
-            </h3>
+<div className="grid md:grid-cols-3 gap-6 mt-10">
 
-            <p className="text-gray-500 mt-4">
+<div className="bg-white rounded-3xl p-8 shadow">
 
-              More views = higher
+<TrendingUp
 
-              chances of selling.
+size={34}
 
-            </p>
+className="text-green-600"
 
-          </div>
+/>
 
-        </div>
+<h3 className="text-2xl font-bold mt-4">
 
-      </div>
+Growth 🚀
 
-    </div>
+</h3>
 
-  );
+<p className="text-gray-500 mt-4">
+
+Keep adding products regularly to increase visibility.
+
+</p>
+
+</div>
+
+<div className="bg-white rounded-3xl p-8 shadow">
+
+<IndianRupee
+
+size={34}
+
+className="text-emerald-600"
+
+/>
+
+<h3 className="text-2xl font-bold mt-4">
+
+Revenue 💰
+
+</h3>
+
+<p className="text-gray-500 mt-4">
+
+Track how much money you've earned from sold products.
+
+</p>
+
+</div>
+
+<div className="bg-white rounded-3xl p-8 shadow">
+
+<Eye
+
+size={34}
+
+className="text-orange-500"
+
+/>
+
+<h3 className="text-2xl font-bold mt-4">
+
+Reach 👀
+
+</h3>
+
+<p className="text-gray-500 mt-4">
+
+More views means higher chances of selling faster.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+);
 
 };
 

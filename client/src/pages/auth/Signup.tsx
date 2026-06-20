@@ -1,332 +1,841 @@
 import { Link, useNavigate } from "react-router-dom";
+
 import { useState } from "react";
+
 import { Eye, EyeOff } from "lucide-react";
+
+import { FcGoogle } from "react-icons/fc";
+
 import axios from "axios";
 
+import {
+
+GoogleAuthProvider,
+
+signInWithPopup,
+
+} from "firebase/auth";
+
+import { auth } from "../../firebase";
+
+import { useAuth } from "../../context/AuthContext";
+
 const Signup = () => {
-  const navigate = useNavigate();
 
-  const [showPassword, setShowPassword] =
-    useState(false);
+const navigate = useNavigate();
 
-  const [loading, setLoading] =
-    useState(false);
+const { login } = useAuth();
 
-  const [name, setName] =
-    useState("");
+const [
 
-  const [email, setEmail] =
-    useState("");
+showPassword,
 
-  const [phone, setPhone] =
-    useState("");
+setShowPassword,
 
-  const [college, setCollege] =
-    useState("");
+] = useState(false);
 
-  const [campus, setCampus] =
-    useState("");
+const [
 
-  const [password, setPassword] =
-    useState("");
+loading,
 
-  // UPDATED
-  const [role, setRole] = useState<
-    "Buyer" | "Seller"
-  >("Buyer");
+setLoading,
 
-  const handleSignup = async () => {
-    try {
-      if (
-        !name ||
-        !email ||
-        !password ||
-        !college ||
-        !campus
-      ) {
-        alert("Please fill all fields");
-        return;
-      }
+] = useState(false);
 
-      setLoading(true);
+const [
 
-      await axios.post(
-        "http://localhost:5000/api/auth/register",
-        {
-          name,
-          email,
-          phone,
+showRoleModal,
 
-          password,
+setShowRoleModal,
 
-          college,
+] = useState(false);
 
-          campus,
+const [
 
-          role,
-        }
-      );
+googleUser,
 
-      alert(
-        "Account Created Successfully 🚀"
-      );
+setGoogleUser,
 
-      navigate("/login");
+] = useState<any>(null);
 
-    } catch (error: any) {
+const [
 
-      console.log(error);
+name,
 
-      alert(
-        error.response?.data?.message ||
-          "Signup Failed"
-      );
+setName,
 
-    } finally {
+] = useState("");
 
-      setLoading(false);
+const [
 
-    }
-  };
+email,
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 flex items-center justify-center p-6">
+setEmail,
 
-      <div className="w-full max-w-6xl bg-white rounded-[40px] overflow-hidden shadow-2xl grid md:grid-cols-2">
+] = useState("");
 
-        <div className="bg-gradient-to-br from-indigo-600 to-purple-700 text-white p-12 flex flex-col justify-center">
+const [
 
-          <h1 className="text-6xl font-extrabold mb-6">
-            CampusCart
-          </h1>
+phone,
 
-          <h2 className="text-4xl font-bold mb-6">
-            Join the smartest student marketplace.
-          </h2>
+setPhone,
 
-          <p className="text-lg text-blue-100">
-            Buy, sell and connect with students
-            across your campus.
-          </p>
-
-        </div>
-
-        <div className="p-10 md:p-14 overflow-y-auto">
-
-          <h2 className="text-4xl font-bold mb-2">
-            Create Account 🚀
-          </h2>
-
-          <p className="text-gray-500 mb-8">
-            Start buying and selling today.
-          </p>
-
-          <div className="space-y-4">
-
-            <input
-              placeholder="Full Name"
-              value={name}
-              onChange={(e) =>
-                setName(e.target.value)
-              }
-              className="w-full p-4 rounded-2xl border"
-            />
+] = useState("");
 
-            <input
-              placeholder="College Email"
-              value={email}
-              onChange={(e) =>
-                setEmail(e.target.value)
-              }
-              className="w-full p-4 rounded-2xl border"
-            />
+const [
 
-            <input
-              placeholder="Phone Number"
-              value={phone}
-              onChange={(e) =>
-                setPhone(e.target.value)
-              }
-              className="w-full p-4 rounded-2xl border"
-            />
+college,
 
-            <select
-              value={college}
-              onChange={(e) =>
-                setCollege(e.target.value)
-              }
-              className="w-full p-4 rounded-2xl border"
-            >
+setCollege,
 
-              <option value="">
-                Select College
-              </option>
+] = useState("");
 
-              <option>PCU Pune</option>
+const [
 
-              <option>MIT-WPU</option>
+campus,
 
-              <option>COEP Pune</option>
+setCampus,
 
-              <option>VIT Pune</option>
+] = useState("");
 
-              <option>Bharati Vidyapeeth</option>
+const [
 
-            </select>
+password,
 
-            <input
-              placeholder="Campus / City"
-              value={campus}
-              onChange={(e) =>
-                setCampus(e.target.value)
-              }
-              className="w-full p-4 rounded-2xl border"
-            />
+setPassword,
 
-            <div className="relative">
+] = useState("");
 
-              <input
-                type={
-                  showPassword
-                    ? "text"
-                    : "password"
-                }
+const [
 
-                placeholder="Password"
+role,
 
-                value={password}
+setRole,
 
-                onChange={(e) =>
-                  setPassword(
-                    e.target.value
-                  )
-                }
+] = useState<
 
-                className="w-full p-4 rounded-2xl border"
-              />
+"Buyer" |
 
-              <button
-                type="button"
+"Seller"
 
-                onClick={() =>
-                  setShowPassword(
-                    !showPassword
-                  )
-                }
+>("Buyer");
 
-                className="absolute right-5 top-5"
-              >
+/* NORMAL SIGNUP */
 
-                {showPassword ? (
+const handleSignup =
 
-                  <EyeOff size={20} />
+async()=>{
 
-                ) : (
+try{
 
-                  <Eye size={20} />
+if(
 
-                )}
+!name ||
 
-              </button>
+!email ||
 
-            </div>
+!password ||
 
-            {/* UPDATED */}
+!college ||
 
-            <div>
+!campus
 
-              <label className="font-semibold">
+){
 
-                Select Role
+alert(
 
-              </label>
+"Please fill all fields"
 
-              <div className="grid grid-cols-2 gap-3 mt-3">
+);
 
-                <button
-                  type="button"
+return;
 
-                  onClick={() =>
-                    setRole("Buyer")
-                  }
+}
 
-                  className={`p-3 rounded-xl border ${
-                    role === "Buyer"
+setLoading(
 
-                      ? "bg-blue-600 text-white"
+true
 
-                      : ""
-                  }`}
-                >
+);
 
-                  Buyer
+await axios.post(
 
-                </button>
+"http://localhost:5000/api/auth/register",
 
-                <button
-                  type="button"
+{
 
-                  onClick={() =>
-                    setRole("Seller")
-                  }
+name,
 
-                  className={`p-3 rounded-xl border ${
-                    role === "Seller"
+email,
 
-                      ? "bg-blue-600 text-white"
+phone,
 
-                      : ""
-                  }`}
-                >
+password,
 
-                  Seller
+college,
 
-                </button>
+campus,
 
-              </div>
+role,
 
-            </div>
+}
 
-            <button
-              onClick={handleSignup}
+);
 
-              disabled={loading}
+alert(
 
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-2xl font-semibold"
-            >
+"Account Created Successfully 🚀"
 
-              {loading
+);
 
-                ? "Creating Account..."
+navigate(
 
-                : "Create Account"}
+"/login"
 
-            </button>
+);
 
-          </div>
+}
 
-          <p className="text-center mt-8 text-gray-500">
+catch(error:any){
 
-            Already have an account?{" "}
+console.log(
 
-            <Link
-              to="/login"
+error
 
-              className="text-blue-600 font-semibold"
-            >
+);
 
-              Login
+alert(
 
-            </Link>
+error.response?.data?.message ||
 
-          </p>
+"Signup Failed"
 
-        </div>
+);
 
-      </div>
+}
 
-    </div>
-  );
+finally{
+
+setLoading(
+
+false
+
+);
+
+}
+
+};
+
+/* GOOGLE SIGNUP */
+
+const handleGoogleSignup =
+
+async()=>{
+
+try{
+
+const provider =
+
+new GoogleAuthProvider();
+
+const result =
+
+await signInWithPopup(
+
+auth,
+
+provider
+
+);
+
+setGoogleUser(
+
+result.user
+
+);
+
+setShowRoleModal(
+
+true
+
+);
+
+}
+
+catch(error){
+
+console.log(
+
+error
+
+);
+
+alert(
+
+"Google Signup Failed"
+
+);
+
+}
+
+};
+
+const completeGoogleSignup = async (
+
+selectedRole:
+
+"Buyer" |
+
+"Seller"
+
+)=>{
+
+try{
+
+const response =
+
+await axios.post(
+
+"http://localhost:5000/api/auth/google-auth",
+
+{
+
+name:
+
+googleUser.displayName,
+
+email:
+
+googleUser.email,
+
+role:
+
+selectedRole,
+
+}
+
+);
+
+login(
+
+response.data.user,
+
+response.data.token
+
+);
+
+setShowRoleModal(
+
+false
+
+);
+
+alert(
+
+`Logged in as ${selectedRole} 🚀`
+
+);
+
+navigate("/");
+
+}
+
+catch(error:any){
+
+console.log(
+
+error
+
+);
+
+alert(
+
+error.response?.data?.message ||
+
+"Google Signup Failed"
+
+);
+
+}
+
+};
+
+return(
+
+<div className="min-h-screen bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 flex items-center justify-center p-6">
+
+<div className="w-full max-w-6xl bg-white rounded-[40px] overflow-hidden shadow-2xl grid md:grid-cols-2">
+
+{/* LEFT */}
+
+<div className="bg-gradient-to-br from-indigo-600 to-purple-700 text-white p-12 flex flex-col justify-center">
+
+<h1 className="text-6xl font-extrabold mb-6">
+
+CampusCart
+
+</h1>
+
+<h2 className="text-4xl font-bold mb-6">
+
+Join the smartest student marketplace.
+
+</h2>
+
+<p className="text-lg text-blue-100">
+
+Buy, sell and connect with students across your campus.
+
+</p>
+
+</div>
+
+{/* RIGHT */}
+
+<div className="p-10 md:p-14 overflow-y-auto">
+
+<h2 className="text-4xl font-bold mb-2">
+
+Create Account 🚀
+
+</h2>
+
+<p className="text-gray-500 mb-8">
+
+Start buying and selling today.
+
+</p>
+
+<div className="space-y-4">
+
+<input
+
+placeholder="Full Name"
+
+value={name}
+
+onChange={(e)=>
+
+setName(
+
+e.target.value
+
+)
+
+}
+
+className="w-full p-4 rounded-2xl border"
+
+/>
+
+<input
+
+placeholder="College Email"
+
+value={email}
+
+onChange={(e)=>
+
+setEmail(
+
+e.target.value
+
+)
+
+}
+
+className="w-full p-4 rounded-2xl border"
+
+/>
+
+<input
+
+placeholder="Phone Number"
+
+value={phone}
+
+onChange={(e)=>
+
+setPhone(
+
+e.target.value
+
+)
+
+}
+
+className="w-full p-4 rounded-2xl border"
+
+/>
+
+<select
+
+value={college}
+
+onChange={(e)=>
+
+setCollege(
+
+e.target.value
+
+)
+
+}
+
+className="w-full p-4 rounded-2xl border"
+
+>
+
+<option value="">
+
+Select College
+
+</option>
+
+<option>
+
+PCU Pune
+
+</option>
+
+<option>
+
+MIT-WPU
+
+</option>
+
+<option>
+
+COEP Pune
+
+</option>
+
+<option>
+
+VIT Pune
+
+</option>
+
+<option>
+
+Bharati Vidyapeeth
+
+</option>
+
+</select>
+
+<input
+
+placeholder="Campus / City"
+
+value={campus}
+
+onChange={(e)=>
+
+setCampus(
+
+e.target.value
+
+)
+
+}
+
+className="w-full p-4 rounded-2xl border"
+
+/>
+
+<div className="relative">
+
+<input
+
+type={
+
+showPassword
+
+? "text"
+
+: "password"
+
+}
+
+placeholder="Password"
+
+value={password}
+
+onChange={(e)=>
+
+setPassword(
+
+e.target.value
+
+)
+
+}
+
+className="w-full p-4 rounded-2xl border"
+
+/>
+
+<button
+
+type="button"
+
+onClick={()=>
+
+setShowPassword(
+
+!showPassword
+
+)
+
+}
+
+className="absolute right-5 top-5"
+
+>
+
+{
+
+showPassword
+
+?
+
+<EyeOff size={20}/>
+
+:
+
+<Eye size={20}/>
+
+}
+
+</button>
+
+</div>
+
+<div>
+
+<label className="font-semibold">
+
+Select Role
+
+</label>
+
+<div className="grid grid-cols-2 gap-3 mt-3">
+
+<button
+
+type="button"
+
+onClick={()=>
+
+setRole(
+
+"Buyer"
+
+)
+
+}
+
+className={`p-3 rounded-xl border ${
+
+role==="Buyer"
+
+?
+
+"bg-blue-600 text-white"
+
+:
+
+""
+
+}`}
+
+>
+
+Buyer
+
+</button>
+
+<button
+
+type="button"
+
+onClick={()=>
+
+setRole(
+
+"Seller"
+
+)
+
+}
+
+className={`p-3 rounded-xl border ${
+
+role==="Seller"
+
+?
+
+"bg-blue-600 text-white"
+
+:
+
+""
+
+}`}
+
+>
+
+Seller
+
+</button>
+
+</div>
+
+</div>
+
+<button
+
+onClick={
+
+handleSignup
+
+}
+
+disabled={
+
+loading
+
+}
+
+className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-2xl font-semibold"
+
+>
+
+{
+
+loading
+
+?
+
+"Creating Account..."
+
+:
+
+"Create Account"
+
+}
+
+</button>
+
+<button
+
+onClick={
+
+handleGoogleSignup
+
+}
+
+className="w-full border py-4 rounded-2xl flex items-center justify-center gap-3 font-semibold hover:bg-gray-50"
+
+>
+
+<FcGoogle size={24}/>
+
+Continue with Google
+
+</button>
+
+</div>
+
+<p className="text-center mt-8 text-gray-500">
+
+Already have an account?{" "}
+
+<Link
+
+to="/login"
+
+className="text-blue-600 font-semibold"
+
+>
+
+Login
+
+</Link>
+
+</p>
+
+</div>
+
+</div>
+
+{showRoleModal && (
+
+<div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+
+<div className="bg-white p-10 rounded-3xl w-[420px] shadow-2xl">
+
+<h2 className="text-3xl font-bold text-center">
+
+Choose Role
+
+</h2>
+
+<div className="grid grid-cols-2 gap-4 mt-8">
+
+<button
+
+onClick={()=>
+
+completeGoogleSignup(
+
+"Buyer"
+
+)
+
+}
+
+className="bg-blue-600 text-white py-4 rounded-2xl font-semibold"
+
+>
+
+🛍️ Buyer
+
+</button>
+
+<button
+
+onClick={()=>
+
+completeGoogleSignup(
+
+"Seller"
+
+)
+
+}
+
+className="bg-purple-600 text-white py-4 rounded-2xl font-semibold"
+
+>
+
+📦 Seller
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+)}
+
+</div>
+
+);
+
 };
 
 export default Signup;

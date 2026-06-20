@@ -1,8 +1,8 @@
 import {
 
-  useEffect,
+useEffect,
 
-  useState,
+useState,
 
 } from "react";
 
@@ -10,287 +10,341 @@ import axios from "axios";
 
 import {
 
-  ShoppingBag,
+ShoppingBag,
 
-  IndianRupee,
+IndianRupee,
 
-  CheckCircle,
+CheckCircle,
+
+Calendar,
 
 } from "lucide-react";
 
 const Purchases = () => {
 
-  const [data, setData] =
+const [loading,setLoading] =
 
-    useState({
+useState(true);
 
-      count: 0,
+const [data,setData] =
 
-      totalSpent: 0,
+useState({
 
-      purchases: [] as any[],
+count:0,
 
-    });
+totalSpent:0,
 
-  useEffect(() => {
+purchases:[] as any[],
 
-    fetchPurchases();
+});
 
-  }, []);
+useEffect(()=>{
 
-  const fetchPurchases =
+fetchPurchases();
 
-    async () => {
+},[]);
 
-      try {
+const fetchPurchases=
 
-        const token =
+async()=>{
 
-          localStorage.getItem(
+try{
 
-            "token"
+const token=
 
-          );
+localStorage.getItem(
 
-        const res =
+"token"
 
-          await axios.get(
+);
 
-            "http://localhost:5000/api/products/my-purchases",
+const res=
 
-            {
+await axios.get(
 
-              headers: {
+"http://localhost:5000/api/products/my-purchases",
 
-                Authorization:
+{
 
-                  `Bearer ${token}`,
+headers:{
 
-              },
+Authorization:
 
-            }
+`Bearer ${token}`,
 
-          );
+},
 
-        setData(
+}
 
-          res.data
+);
 
-        );
+setData(
 
-      } catch (error) {
+res.data
 
-        console.log(error);
+);
 
-      }
+}
 
-    };
+catch(error){
 
-  return (
+console.log(error);
 
-    <div className="min-h-screen bg-gray-50">
+}
 
-      <div className="max-w-7xl mx-auto px-6 py-10">
+finally{
 
-        {/* HEADER */}
+setLoading(false);
 
-        <div className="bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white rounded-3xl p-10 shadow-xl mb-10">
+}
 
-          <h1 className="text-5xl font-bold">
+};
 
-            My Purchases 🛍️
+if(loading){
 
-          </h1>
+return(
 
-          <p className="text-green-100 mt-3 text-lg">
+<div className="min-h-screen flex items-center justify-center text-2xl font-bold">
 
-            Track everything you've bought.
+Loading Purchases...
 
-          </p>
+</div>
 
-        </div>
+);
 
-        {/* STATS */}
+}
 
-        <div className="grid md:grid-cols-2 gap-6 mb-10">
+return(
 
-          <div className="bg-white rounded-3xl p-8 shadow">
+<div className="min-h-screen bg-gray-50">
 
-            <ShoppingBag
+<div className="max-w-7xl mx-auto px-6 py-10">
 
-              size={40}
+{/* HEADER */}
 
-              className="text-blue-600"
+<div className="bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 text-white rounded-3xl p-10 shadow-xl mb-10">
 
-            />
+<h1 className="text-5xl font-bold">
 
-            <h2 className="text-5xl font-bold mt-5">
+My Purchases 🛍️
 
-              {data.count}
+</h1>
 
-            </h2>
+<p className="text-green-100 mt-3 text-lg">
 
-            <p className="text-gray-500 mt-2">
+Track everything you've bought.
 
-              Total Purchases
+</p>
 
-            </p>
+</div>
 
-          </div>
+{/* STATS */}
 
-          <div className="bg-white rounded-3xl p-8 shadow">
+<div className="grid md:grid-cols-2 gap-6 mb-10">
 
-            <IndianRupee
+<div className="bg-white rounded-3xl p-8 shadow">
 
-              size={40}
+<ShoppingBag
 
-              className="text-green-600"
+size={40}
 
-            />
+className="text-blue-600"
 
-            <h2 className="text-5xl font-bold mt-5 text-green-600">
+/>
 
-              ₹{data.totalSpent.toLocaleString()}
+<h2 className="text-5xl font-bold mt-5">
 
-            </h2>
+{data.count}
 
-            <p className="text-gray-500 mt-2">
+</h2>
 
-              Total Spent
+<p className="text-gray-500 mt-2">
 
-            </p>
+Total Purchases
 
-          </div>
+</p>
 
-        </div>
+</div>
 
-        {/* HISTORY */}
+<div className="bg-white rounded-3xl p-8 shadow">
 
-        <div className="bg-white rounded-3xl p-8 shadow">
+<IndianRupee
 
-          <h2 className="text-3xl font-bold mb-8">
+size={40}
 
-            Purchase History
+className="text-green-600"
 
-          </h2>
+/>
 
-          {data.purchases.length === 0 ? (
+<h2 className="text-5xl font-bold mt-5 text-green-600">
 
-            <div className="text-center py-20">
+₹{data.totalSpent.toLocaleString()}
 
-              <h3 className="text-3xl font-bold">
+</h2>
 
-                No Purchases Yet
+<p className="text-gray-500 mt-2">
 
-              </h3>
+Total Spent
 
-              <p className="text-gray-500 mt-3">
+</p>
 
-                Start exploring products.
+</div>
 
-              </p>
+</div>
 
-            </div>
+{/* HISTORY */}
 
-          ) : (
+<div className="bg-white rounded-3xl p-8 shadow">
 
-            <div className="space-y-5">
+<h2 className="text-3xl font-bold mb-8">
 
-              {data.purchases.map(
+Purchase History
 
-                (item) => (
+</h2>
 
-                  <div
+{data.purchases.length===0 ?(
 
-                    key={item._id}
+<div className="text-center py-20">
 
-                    className="border rounded-3xl p-5 flex flex-col md:flex-row justify-between items-center gap-5"
+<h3 className="text-3xl font-bold">
 
-                  >
+No Purchases Yet 😢
 
-                    <div className="flex items-center gap-5">
+</h3>
 
-                      <img
+<p className="text-gray-500 mt-3">
 
-                        src={
+Start exploring products.
 
-                          item.images?.[0] ||
+</p>
 
-                          "/logo.png"
+</div>
 
-                        }
+):(
 
-                        alt={item.title}
+<div className="space-y-5">
 
-                        className="w-24 h-24 rounded-2xl object-cover"
+{data.purchases.map(
 
-                      />
+(item)=>(
 
-                      <div>
+<div
 
-                        <h3 className="text-2xl font-bold">
+key={item._id}
 
-                          {item.title}
+className="border rounded-3xl p-5 flex flex-col md:flex-row justify-between items-center gap-5"
 
-                        </h3>
+>
 
-                        <p className="text-gray-500 mt-2">
+<div className="flex items-center gap-5">
 
-                          Seller:
+<img
 
-                          {" "}
+src={
 
-                          {item.seller?.name}
+item.images?.[0]
 
-                        </p>
+||
 
-                      </div>
+"/logo.png"
 
-                    </div>
+}
 
-                    <div className="text-right">
+alt={item.title}
 
-                      <h3 className="text-3xl font-bold text-green-600">
+className="w-24 h-24 rounded-2xl object-cover"
 
-                        ₹
+/>
 
-                        {(
+<div>
 
-                          item.soldPrice ||
+<h3 className="text-2xl font-bold">
 
-                          item.price
+{item.title}
 
-                        ).toLocaleString()}
+</h3>
 
-                      </h3>
+<p className="text-gray-500 mt-2">
 
-                      <div className="flex items-center gap-2 text-green-600 mt-3">
+Seller:
 
-                        <CheckCircle size={18} />
+{" "}
 
-                        Purchased
+{item.seller?.name}
 
-                      </div>
+</p>
 
-                    </div>
+<p className="text-sm text-gray-400">
 
-                  </div>
+{item.seller?.campus}
 
-                )
+</p>
 
-              )}
+</div>
 
-            </div>
+</div>
 
-          )}
+<div className="text-right">
 
-        </div>
+<h3 className="text-3xl font-bold text-green-600">
 
-      </div>
+₹
 
-    </div>
+{(
 
-  );
+item.soldPrice
+
+||
+
+item.price
+
+).toLocaleString()}
+
+</h3>
+
+<div className="flex items-center justify-end gap-2 text-green-600 mt-3">
+
+<CheckCircle size={18}/>
+
+Purchased
+
+</div>
+
+{item.soldAt && (
+
+<div className="flex items-center justify-end gap-2 text-gray-500 mt-2">
+
+<Calendar size={16}/>
+
+{new Date(
+
+item.soldAt
+
+).toLocaleDateString()}
+
+</div>
+
+)}
+
+</div>
+
+</div>
+
+)
+
+)}
+
+</div>
+
+)}
+
+</div>
+
+</div>
+
+</div>
+
+);
 
 };
 

@@ -1,6 +1,9 @@
 import { useState } from "react";
 
-import { Search } from "lucide-react";
+import {
+Search,
+TrendingUp,
+} from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";
 
@@ -8,321 +11,531 @@ import ProductCard from "../components/product/ProductCard";
 
 import { useProducts } from "../context/ProductContext";
 
-const categories = [
+const categories=[
 
-  "All",
+"All",
 
-  "Electronics",
+"Electronics",
 
-  "Books & Notes",
+"Books & Notes",
 
-  "Calculators",
+"Calculators",
 
-  "Bags",
+"Bags",
 
-  "Hostel Essentials",
+"Fashion",
 
-  "Lab Equipment",
+"Hostel Essentials",
+
+"Lab Equipment",
 
 ];
 
-const Products = () => {
+const Products=()=>{
 
-  const { user } = useAuth();
+const { user }=
 
-  const { products } = useProducts();
+useAuth();
 
-  const [search, setSearch] = useState("");
+const { products }=
 
-  const [category, setCategory] = useState("All");
+useProducts();
 
-  const [sortBy, setSortBy] = useState("latest");
+const [search,setSearch]=
 
-  let filteredProducts = products.filter((product) => {
+useState("");
 
-    const matchesSearch =
+const [category,setCategory]=
 
-      product.title
+useState("All");
 
-        ?.toLowerCase()
+const [sortBy,setSortBy]=
 
-        .includes(search.toLowerCase())
+useState("latest");
 
-      ||
+const [showSold,
 
-      product.description
+setShowSold]=
 
-        ?.toLowerCase()
+useState(false);
 
-        .includes(search.toLowerCase());
+let filteredProducts=
 
-    const matchesCategory =
+products.filter(
 
-      category === "All"
+(product)=>{
 
-        ? true
+const matchesSearch=
 
-        : product.category === category;
+product.title
 
-    return matchesSearch && matchesCategory;
+?.toLowerCase()
 
-  });
+.includes(
 
-  // Hide sold products
+search.toLowerCase()
 
-  filteredProducts = filteredProducts.filter(
+)
 
-    (product) => !product.isSold
+||
 
-  );
+product.description
 
-  // Sorting
+?.toLowerCase()
 
-  if (sortBy === "low") {
+.includes(
 
-    filteredProducts.sort(
+search.toLowerCase()
 
-      (a, b) => a.price - b.price
+);
 
-    );
+const matchesCategory=
 
-  }
+category==="All"
 
-  if (sortBy === "high") {
+? true
 
-    filteredProducts.sort(
+: product.category===category;
 
-      (a, b) => b.price - a.price
+return (
 
-    );
+matchesSearch
 
-  }
+&&
 
-  return (
+matchesCategory
 
-    <div className="max-w-7xl mx-auto px-6 py-10">
+);
 
-      {/* HEADER */}
+}
 
-      <div className="mb-10">
+);
 
-        <h1 className="text-5xl font-bold">
+if(
 
-          Marketplace 🛒
+!showSold
 
-        </h1>
+){
 
-        <p className="text-gray-500 mt-3">
+filteredProducts=
 
-          Explore products listed by students.
+filteredProducts.filter(
 
-        </p>
+(product)=>
 
-        {!user && (
+!product.isSold
 
-          <div className="mt-5 bg-blue-100 text-blue-700 p-4 rounded-2xl">
+);
 
-            👀 You are browsing as Guest.
+}
 
-            Login to chat, wishlist and purchase.
+if(
 
-          </div>
+sortBy==="low"
 
-        )}
+){
 
-      </div>
+filteredProducts.sort(
 
-      {/* FILTER */}
+(a,b)=>
 
-      <div className="bg-white rounded-3xl shadow p-6 mb-8">
+a.price-b.price
 
-        <div className="grid md:grid-cols-3 gap-4">
+);
 
-          <div className="relative">
+}
 
-            <Search
+if(
 
-              size={20}
+sortBy==="high"
 
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+){
 
-            />
+filteredProducts.sort(
 
-            <input
+(a,b)=>
 
-              type="text"
+b.price-a.price
 
-              placeholder="Search products..."
+);
 
-              value={search}
+}
 
-              onChange={(e) =>
+if(
 
-                setSearch(
+sortBy==="views"
 
-                  e.target.value
+){
 
-                )
+filteredProducts.sort(
 
-              }
+(a,b)=>
 
-              className="w-full pl-12 pr-4 py-3 border rounded-2xl"
+(b.views||0)
 
-            />
+-
 
-          </div>
+(a.views||0)
 
-          <select
+);
 
-            value={category}
+}
 
-            onChange={(e) =>
+if(
 
-              setCategory(
+sortBy==="latest"
 
-                e.target.value
+){
 
-              )
+filteredProducts.sort(
 
-            }
+(a,b)=>
 
-            className="border rounded-2xl px-4 py-3"
+new Date(
 
-          >
+b.createdAt
 
-            {categories.map(
+).getTime()
 
-              (item) => (
+-
 
-                <option
+new Date(
 
-                  key={item}
+a.createdAt
 
-                  value={item}
+).getTime()
 
-                >
+);
 
-                  {item}
+}
 
-                </option>
+const trending=
 
-              )
+products.filter(
 
-            )}
+(product)=>
 
-          </select>
+(product.views||0)
 
-          <select
+>200
 
-            value={sortBy}
+);
 
-            onChange={(e) =>
+return(
 
-              setSortBy(
+<div className="max-w-7xl mx-auto px-6 py-10">
 
-                e.target.value
+{/* HEADER */}
 
-              )
+<div className="mb-10">
 
-            }
+<h1 className="text-5xl font-bold">
 
-            className="border rounded-2xl px-4 py-3"
+Marketplace 🛒
 
-          >
+</h1>
 
-            <option value="latest">
+<p className="text-gray-500 mt-3">
 
-              Latest
+Buy & sell with students.
 
-            </option>
+</p>
 
-            <option value="low">
+{!user &&(
 
-              Price Low → High
+<div className="mt-5 bg-blue-100 text-blue-700 p-4 rounded-2xl">
 
-            </option>
+👀 Guest Mode Enabled
 
-            <option value="high">
+Login to chat,
 
-              Price High → Low
+wishlist and purchase.
 
-            </option>
+</div>
 
-          </select>
+)}
 
-        </div>
+</div>
 
-      </div>
+{/* TRENDING */}
 
-      {/* COUNT */}
+<div className="bg-indigo-50 rounded-3xl p-6 mb-8">
 
-      <div className="flex justify-between items-center mb-8">
+<div className="flex items-center gap-2 mb-4">
 
-        <h2 className="text-2xl font-bold">
+<TrendingUp/>
 
-          Products
+<h2 className="font-bold text-2xl">
 
-        </h2>
+Trending Products
 
-        <div className="bg-blue-100 text-blue-700 px-4 py-2 rounded-xl font-medium">
+</h2>
 
-          {filteredProducts.length}
+</div>
 
-          {" "}
+<div className="flex gap-3 overflow-x-auto">
 
-          Products
+{trending.slice(0,5)
 
-        </div>
+.map((item)=>(
 
-      </div>
+<div
 
-      {/* EMPTY */}
+key={item._id}
 
-      {filteredProducts.length === 0 ? (
+className="bg-white px-4 py-2 rounded-xl whitespace-nowrap shadow"
 
-        <div className="bg-white rounded-3xl shadow p-14 text-center">
+>
 
-          <h2 className="text-3xl font-bold">
+🔥 {item.title}
 
-            No Products Found 😢
+</div>
 
-          </h2>
+))}
 
-          <p className="text-gray-500 mt-3">
+</div>
 
-            Try another search keyword.
+</div>
 
-          </p>
+{/* FILTER */}
 
-        </div>
+<div className="bg-white rounded-3xl shadow p-6 mb-8">
 
-      ) : (
+<div className="grid md:grid-cols-4 gap-4">
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<div className="relative">
 
-          {filteredProducts.map(
+<Search
 
-            (product) => (
+size={20}
 
-              <ProductCard
+className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
 
-                key={product._id}
+/>
 
-                product={product}
+<input
 
-              />
+type="text"
 
-            )
+placeholder="Search..."
 
-          )}
+value={search}
 
-        </div>
+onChange={(e)=>
 
-      )}
+setSearch(
 
-    </div>
+e.target.value
 
-  );
+)
+
+}
+
+className="w-full pl-12 pr-4 py-3 border rounded-2xl"
+
+/>
+
+</div>
+
+<select
+
+value={category}
+
+onChange={(e)=>
+
+setCategory(
+
+e.target.value
+
+)
+
+}
+
+className="border rounded-2xl px-4 py-3"
+
+>
+
+{categories.map(
+
+(item)=>(
+
+<option
+
+key={item}
+
+value={item}
+
+>
+
+{item}
+
+</option>
+
+)
+
+)}
+
+</select>
+
+<select
+
+value={sortBy}
+
+onChange={(e)=>
+
+setSortBy(
+
+e.target.value
+
+)
+
+}
+
+className="border rounded-2xl px-4 py-3"
+
+>
+
+<option value="latest">
+
+Latest
+
+</option>
+
+<option value="low">
+
+Price Low → High
+
+</option>
+
+<option value="high">
+
+Price High → Low
+
+</option>
+
+<option value="views">
+
+Most Viewed
+
+</option>
+
+</select>
+
+<button
+
+onClick={()=>
+
+setShowSold(
+
+!showSold
+
+)
+
+}
+
+className="bg-indigo-600 text-white rounded-2xl"
+
+>
+
+{showSold
+
+? "Hide Sold"
+
+: "Show Sold"}
+
+</button>
+
+</div>
+
+</div>
+
+{/* COUNT */}
+
+<div className="flex justify-between items-center mb-8">
+
+<h2 className="text-2xl font-bold">
+
+Products
+
+</h2>
+
+<div className="flex gap-3">
+
+<div className="bg-blue-100 text-blue-700 px-4 py-2 rounded-xl">
+
+{filteredProducts.length}
+
+Products
+
+</div>
+
+<div className="bg-green-100 text-green-700 px-4 py-2 rounded-xl">
+
+{products.filter(
+
+(p)=>p.isSold
+
+).length}
+
+Sold
+
+</div>
+
+</div>
+
+</div>
+
+{/* EMPTY */}
+
+{filteredProducts.length===0
+
+?(
+
+<div className="bg-white rounded-3xl shadow p-14 text-center">
+
+<h2 className="text-3xl font-bold">
+
+No Products 😢
+
+</h2>
+
+<p className="text-gray-500 mt-3">
+
+Try another keyword.
+
+</p>
+
+</div>
+
+)
+
+:(
+
+<div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+{filteredProducts.map(
+
+(product)=>(
+
+<ProductCard
+
+key={product._id}
+
+product={product}
+
+/>
+
+)
+
+)}
+
+</div>
+
+)}
+
+</div>
+
+);
 
 };
 

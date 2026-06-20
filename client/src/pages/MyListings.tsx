@@ -3,6 +3,7 @@ import {
   Trash2,
   IndianRupee,
   Plus,
+  CheckCircle,
 } from "lucide-react";
 
 import { Link } from "react-router-dom";
@@ -15,11 +16,11 @@ import ProductCard from "../components/product/ProductCard";
 const MyListings = () => {
   const { user } = useAuth();
 
-const {
-  products,
-  deleteProduct,
-  markProductSold,
-} = useProducts();
+  const {
+    products,
+    deleteProduct,
+    markProductSold,
+  } = useProducts();
 
   if (!user) {
     return (
@@ -29,93 +30,79 @@ const {
     );
   }
 
-  const myProducts =
-    products.filter(
-      (product) =>
-        product.seller?._id ===
-        user._id
-    );
- console.log("USER =", user);
-console.log("PRODUCTS =", products);
-console.log("MY PRODUCTS =", myProducts); 
+  const myProducts = products.filter(
+    (product) =>
+      product.seller?._id === user._id
+  );
 
-  const totalValue =
-    myProducts.reduce(
-      (sum, product) =>
-        sum + product.price,
-      0
-    );
+  const activeProducts = myProducts.filter(
+    (product) => !product.isSold
+  );
 
-  const handleDelete =
-    async (
-      e: React.MouseEvent,
-      productId: string
-    ) => {
-      e.preventDefault();
+  const soldProducts = myProducts.filter(
+    (product) => product.isSold
+  );
 
-      const confirmDelete =
-        window.confirm(
-          "Are you sure you want to delete this product?"
-        );
+  const totalValue = activeProducts.reduce(
+    (sum, product) =>
+      sum + product.price,
+    0
+  );
 
-      if (!confirmDelete)
-        return;
+  const totalRevenue = soldProducts.reduce(
+    (sum, product) =>
+      sum +
+      (product.soldPrice ||
+        product.price),
+    0
+  );
 
-      try {
-        await deleteProduct(
-          productId
-        );
+  const handleDelete = async (
+    e: React.MouseEvent,
+    productId: string
+  ) => {
+    e.preventDefault();
 
-        alert(
-          "Product deleted successfully 🚀"
-        );
-      } catch (error) {
-        console.log(error);
-
-        alert(
-          "Failed to delete product"
-        );
-      }
-    };   
-   const handleSold = async (
-  e: React.MouseEvent,
-  productId: string,
-  price: number
-) => {
-
-  e.preventDefault();
-
-  try {
-
-    const buyerId =
-      prompt(
-        "Paste Buyer ID"
+    const confirmDelete =
+      window.confirm(
+        "Delete this product?"
       );
 
-    if (!buyerId)
-      return;
+    if (!confirmDelete) return;
 
-    await markProductSold(
+    try {
+      await deleteProduct(
+        productId
+      );
 
-      productId,
+      alert(
+        "Deleted Successfully 🚀"
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-      price,
+  const handleSold = async (
+    e: React.MouseEvent,
+    productId: string,
+    price: number
+  ) => {
+    e.preventDefault();
 
-      buyerId
+    try {
+      await markProductSold(
+        productId,
+        price
+      );
 
-    );
-
-    alert(
-      "Product marked as sold ✅"
-    );
-
-  } catch (error) {
-
-    console.log(error);
-
-  }
-
-};
+      alert(
+        "Product marked as sold ✅"
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -127,20 +114,18 @@ console.log("MY PRODUCTS =", myProducts);
         <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl p-8 text-white shadow-xl mb-10">
 
           <h1 className="text-4xl font-bold">
-            Seller Dashboard
+            My Listings 📦
           </h1>
 
           <p className="mt-3 text-white/90">
-            Welcome back,
-            {" "}
-            {user.name}
+            Welcome back, {user.name}
           </p>
 
         </div>
 
         {/* STATS */}
 
-        <div className="grid md:grid-cols-3 gap-6 mb-10">
+        <div className="grid md:grid-cols-4 gap-6 mb-10">
 
           <div className="bg-white rounded-3xl p-6 shadow">
 
@@ -169,6 +154,18 @@ console.log("MY PRODUCTS =", myProducts);
 
           <div className="bg-white rounded-3xl p-6 shadow">
 
+            <p className="text-gray-500">
+              Active Products
+            </p>
+
+            <h2 className="text-4xl font-bold mt-2 text-indigo-600">
+              {activeProducts.length}
+            </h2>
+
+          </div>
+
+          <div className="bg-white rounded-3xl p-6 shadow">
+
             <div className="flex items-center justify-between">
 
               <div>
@@ -178,8 +175,7 @@ console.log("MY PRODUCTS =", myProducts);
                 </p>
 
                 <h2 className="text-4xl font-bold mt-2 text-green-600">
-                  ₹
-                  {totalValue.toLocaleString()}
+                  ₹{totalValue.toLocaleString()}
                 </h2>
 
               </div>
@@ -195,23 +191,19 @@ console.log("MY PRODUCTS =", myProducts);
 
           <div className="bg-white rounded-3xl p-6 shadow">
 
-            <div>
+            <p className="text-gray-500">
+              Revenue
+            </p>
 
-              <p className="text-gray-500">
-                Active Products
-              </p>
-
-              <h2 className="text-4xl font-bold mt-2 text-indigo-600">
-                {myProducts.length}
-              </h2>
-
-            </div>
+            <h2 className="text-4xl font-bold mt-2 text-purple-600">
+              ₹{totalRevenue.toLocaleString()}
+            </h2>
 
           </div>
 
         </div>
 
-        {/* EMPTY STATE */}
+        {/* EMPTY */}
 
         {myProducts.length === 0 ? (
 
@@ -222,22 +214,25 @@ console.log("MY PRODUCTS =", myProducts);
             </h2>
 
             <p className="text-gray-500 mt-3">
-              Add your first product and start selling on CampusCart.
+              Add your first product
             </p>
 
             <Link
               to="/add-product"
-              className="inline-flex items-center gap-2 mt-8 bg-indigo-600 text-white px-6 py-3 rounded-2xl hover:bg-indigo-700"
+              className="inline-flex items-center gap-2 mt-8 bg-indigo-600 text-white px-6 py-3 rounded-2xl"
             >
+
               <Plus size={18} />
+
               Add Product
+
             </Link>
 
           </div>
 
         ) : (
 
-          <div>
+          <>
 
             <div className="flex justify-between items-center mb-8">
 
@@ -247,64 +242,88 @@ console.log("MY PRODUCTS =", myProducts);
 
               <Link
                 to="/add-product"
-                className="inline-flex items-center gap-2 bg-indigo-600 text-white px-5 py-3 rounded-2xl hover:bg-indigo-700"
+                className="inline-flex items-center gap-2 bg-indigo-600 text-white px-5 py-3 rounded-2xl"
               >
+
                 <Plus size={18} />
+
                 Add Product
+
               </Link>
 
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 
-             {myProducts.map(
-  (product) => (
-    <div
-      key={product._id}
-      className="relative"
-    >
-      <ProductCard
-        product={product}
-      />
+              {myProducts.map(
+                (product) => (
 
-      {!product.isSold && (
-        <button
-          onClick={(e) =>
-            handleSold(
-              e,
-              product._id,
-              product.price
-            )
-          }
-          className="absolute top-3 right-3 bg-green-600 text-white px-3 py-2 rounded-xl shadow-lg hover:bg-green-700 z-20"
-        >
-          SOLD
-        </button>
-      )}
+                  <div
+                    key={product._id}
+                    className="relative"
+                  >
 
-      {product.isSold && (
-        <div className="absolute top-3 right-3 bg-black text-white px-3 py-2 rounded-xl shadow-lg z-20">
-          SOLD ✓
-        </div>
-      )}
+                    <ProductCard
+                      product={product}
+                    />
 
-      <button
-        onClick={(e) =>
-          handleDelete(
-            e,
-            product._id
-          )
-        }
-        className="absolute top-3 left-3 bg-red-500 text-white p-3 rounded-2xl shadow-lg hover:bg-red-600 z-20"
-      >
-        <Trash2 size={18} />
-      </button>
-    </div>
-  )
-)}
+                    {!product.isSold && (
+
+                      <button
+                        onClick={(e) =>
+                          handleSold(
+                            e,
+                            product._id,
+                            product.price
+                          )
+                        }
+                        className="absolute top-3 right-3 bg-green-600 text-white px-3 py-2 rounded-xl z-20"
+                      >
+
+                        SOLD
+
+                      </button>
+
+                    )}
+
+                    {product.isSold && (
+
+                      <div className="absolute top-3 right-3 bg-black text-white px-3 py-2 rounded-xl z-20 flex items-center gap-1">
+
+                        <CheckCircle
+                          size={16}
+                        />
+
+                        Sold
+
+                      </div>
+
+                    )}
+
+                    <button
+                      onClick={(e) =>
+                        handleDelete(
+                          e,
+                          product._id
+                        )
+                      }
+                      className="absolute top-3 left-3 bg-red-500 text-white p-3 rounded-2xl z-20"
+                    >
+
+                      <Trash2
+                        size={18}
+                      />
+
+                    </button>
+
+                  </div>
+
+                )
+              )}
+
             </div>
 
-          </div>
+          </>
 
         )}
 

@@ -1,3 +1,4 @@
+import { socket } from "../../socket";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../context/AuthContext";
@@ -14,6 +15,10 @@ import {
   ShoppingBag,
 } from "lucide-react";
 
+import { useEffect, useState } from "react";
+
+import axios from "axios";
+
 const Navbar = () => {
 
   const {
@@ -24,13 +29,167 @@ const Navbar = () => {
   const navigate =
     useNavigate();
 
-  const handleLogout = () => {
+  const [unreadCount,
+  setUnreadCount] =
+    useState(0);
 
-    logout();
+ useEffect(() => {
 
-    navigate("/");
+  if (!user) return;
+
+  fetchUnread();
+
+  const interval = setInterval(() => {
+
+    fetchUnread();
+
+  }, 1500);
+
+  return () => {
+
+    clearInterval(interval);
 
   };
+
+}, [user]);
+
+useEffect(() => {
+
+  const updateBadge = async () => {
+
+    await fetchUnread();
+
+  };
+
+  socket.on(
+
+    "receive_message",
+
+    updateBadge
+
+  );
+
+  return () => {
+
+    socket.off(
+
+      "receive_message",
+
+      updateBadge
+
+    );
+
+  };
+
+}, []);
+
+useEffect(() => {
+
+  const update = async () => {
+
+    await fetchUnread();
+
+  };
+
+  window.addEventListener(
+
+    "message_seen",
+
+    update
+
+  );
+
+  return () => {
+
+    window.removeEventListener(
+
+      "message_seen",
+
+      update
+
+    );
+
+  };
+
+}, []);
+
+const fetchUnread =
+async()=>{
+
+try{
+
+const token=
+
+localStorage.getItem(
+
+"token"
+
+);
+
+const res=
+
+await axios.get(
+
+"http://localhost:5000/api/messages/my-chats",
+
+{
+
+headers:{
+
+Authorization:
+
+`Bearer ${token}`,
+
+},
+
+}
+
+);
+
+const unread=
+
+res.data.chats.reduce(
+
+(
+
+total:number,
+
+chat:any
+
+)=>
+
+total+
+
+(chat.unread || 0),
+
+0
+
+);
+
+setUnreadCount(
+
+unread
+
+);
+
+}
+
+catch(error){
+
+console.log(error);
+
+}
+
+};
+
+  const handleLogout =
+    () => {
+
+      logout();
+
+      navigate("/");
+
+    };
 
   return (
 
@@ -43,8 +202,11 @@ const Navbar = () => {
           {/* LOGO */}
 
           <Link
+
             to="/"
+
             className="text-2xl font-bold text-blue-600"
+
           >
 
             CampusCart
@@ -58,31 +220,35 @@ const Navbar = () => {
             <div className="hidden md:flex flex-1 max-w-lg relative">
 
               <Search
+
                 size={18}
 
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+
               />
 
               <input
+
                 type="text"
 
                 placeholder="Search products..."
 
                 className="w-full pl-11 pr-4 py-3 rounded-xl border bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+
               />
 
             </div>
 
           )}
 
-          {/* NAV */}
-
           <div className="flex items-center gap-5">
 
             <Link
+
               to="/"
 
               className="text-sm font-medium hover:text-blue-600"
+
             >
 
               Home
@@ -90,25 +256,27 @@ const Navbar = () => {
             </Link>
 
             <Link
+
               to="/products"
 
               className="text-sm font-medium hover:text-blue-600"
+
             >
 
               Products
 
             </Link>
 
-            {/* GUEST */}
-
             {!user && (
 
               <>
 
                 <Link
+
                   to="/login"
 
                   className="font-medium hover:text-blue-600"
+
                 >
 
                   Login
@@ -116,9 +284,11 @@ const Navbar = () => {
                 </Link>
 
                 <Link
+
                   to="/signup"
 
                   className="bg-blue-600 text-white px-5 py-2 rounded-xl hover:bg-blue-700"
+
                 >
 
                   Signup
@@ -136,19 +306,37 @@ const Navbar = () => {
               <>
 
                 <Link
+
                   to="/messages"
 
-                  className="hover:text-blue-600"
+                  className="relative hover:text-blue-600"
+
                 >
 
                   <MessageCircle size={22} />
 
+                  {unreadCount > 0 && (
+
+                    <span
+
+                      className="absolute -top-2 -right-2 bg-red-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold animate-pulse"
+
+                    >
+
+                      {unreadCount}
+
+                    </span>
+
+                  )}
+
                 </Link>
 
                 <Link
+
                   to="/wishlist"
 
                   className="hover:text-red-500"
+
                 >
 
                   <Heart size={22} />
@@ -156,9 +344,11 @@ const Navbar = () => {
                 </Link>
 
                 <Link
+
                   to="/purchases"
 
                   className="hover:text-green-600"
+
                 >
 
                   <ShoppingBag size={22} />
@@ -166,9 +356,11 @@ const Navbar = () => {
                 </Link>
 
                 <Link
+
                   to="/profile"
 
                   className="hover:text-blue-600"
+
                 >
 
                   <User size={22} />
@@ -176,9 +368,11 @@ const Navbar = () => {
                 </Link>
 
                 <button
+
                   onClick={handleLogout}
 
                   className="hover:text-red-600"
+
                 >
 
                   <LogOut size={22} />
@@ -196,19 +390,37 @@ const Navbar = () => {
               <>
 
                 <Link
+
                   to="/messages"
 
-                  className="hover:text-blue-600"
+                  className="relative hover:text-blue-600"
+
                 >
 
                   <MessageCircle size={22} />
 
+                  {unreadCount > 0 && (
+
+                    <span
+
+                      className="absolute -top-2 -right-2 bg-red-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold animate-pulse"
+
+                    >
+
+                      {unreadCount}
+
+                    </span>
+
+                  )}
+
                 </Link>
 
                 <Link
+
                   to="/add-product"
 
                   className="hover:text-green-600"
+
                 >
 
                   <PlusCircle size={22} />
@@ -216,9 +428,11 @@ const Navbar = () => {
                 </Link>
 
                 <Link
+
                   to="/my-listings"
 
                   className="hover:text-indigo-600"
+
                 >
 
                   <Package size={22} />
@@ -226,9 +440,11 @@ const Navbar = () => {
                 </Link>
 
                 <Link
+
                   to="/seller-dashboard"
 
                   className="hover:text-purple-600"
+
                 >
 
                   <BarChart3 size={22} />
@@ -236,9 +452,11 @@ const Navbar = () => {
                 </Link>
 
                 <Link
+
                   to="/profile"
 
                   className="hover:text-blue-600"
+
                 >
 
                   <User size={22} />
@@ -246,9 +464,11 @@ const Navbar = () => {
                 </Link>
 
                 <button
+
                   onClick={handleLogout}
 
                   className="hover:text-red-600"
+
                 >
 
                   <LogOut size={22} />

@@ -3,23 +3,66 @@ import express from "express";
 import protect from "../middleware/authMiddleware.js";
 
 import {
-  sendMessage,
-  getMessages,
+
+sendMessage,
+
+getMessages,
+
+getMyChats,
+
+deleteMessage,
+
 } from "../controllers/messageController.js";
 
 const router =
-  express.Router();
+express.Router();
+
+/* SEND MESSAGE */
 
 router.post(
-  "/",
-  protect,
-  sendMessage
+
+"/",
+
+protect,
+
+sendMessage
+
 );
 
+/* ALL MY CHATS */
+
 router.get(
-  "/:productId/:userId",
-  protect,
-  getMessages
+
+"/my-chats",
+
+protect,
+
+getMyChats
+
+);
+
+/* DELETE MESSAGE */
+
+router.delete(
+
+"/:id",
+
+protect,
+
+deleteMessage
+
+);
+
+/* SINGLE CONVERSATION */
+
+router.get(
+
+"/:productId/:userId",
+
+protect,
+
+getMessages
+
 );
 
 export default router;

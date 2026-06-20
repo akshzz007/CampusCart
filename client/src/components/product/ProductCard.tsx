@@ -1,376 +1,514 @@
 import type { Product } from "../../types";
 
 import {
-  Heart,
-  Eye,
-  CheckCircle,
-  User,
-  MessageCircle,
+Heart,
+Eye,
+CheckCircle,
+User,
+MessageCircle,
+TrendingUp,
+Star,
+BadgeIndianRupee,
 } from "lucide-react";
 
 import {
-  useEffect,
-  useState,
+useEffect,
+useState,
 } from "react";
 
 import {
-  Link,
-  useNavigate,
+Link,
+useNavigate,
 } from "react-router-dom";
 
-import { useAuth } from "../../context/AuthContext";
+import { useAuth }
 
-interface Props {
-  product: Product;
+from "../../context/AuthContext";
 
-  onWishlistToggle?: (
-    id: string
-  ) => void;
+interface Props{
+
+product:Product;
+
+onWishlistToggle?:(
+id:string
+
+)=>void;
+
 }
 
-const ProductCard = ({
-  product,
-  onWishlistToggle,
-}: Props) => {
+const ProductCard=({
 
-  const {
-    isAuthenticated,
-    user,
-  } = useAuth();
+product,
 
-  const navigate =
-    useNavigate();
+onWishlistToggle,
 
-  const [
-    isWishlisted,
-    setIsWishlisted,
-  ] = useState(false);
+}:Props)=>{
 
-  useEffect(() => {
+const {
 
-    const savedWishlist =
-      localStorage.getItem(
-        "campuscart-wishlist"
-      );
+isAuthenticated,
 
-    if (savedWishlist) {
+user,
 
-      const wishlistIds =
-        JSON.parse(
-          savedWishlist
-        );
+}=useAuth();
 
-      setIsWishlisted(
+const navigate=
 
-        wishlistIds.includes(
-          product._id
-        )
+useNavigate();
 
-      );
+const [
 
-    }
+isWishlisted,
 
-  }, [product._id]);
+setIsWishlisted,
 
-  const toggleWishlist = (
-    e: React.MouseEvent
-  ) => {
+]=useState(false);
 
-    e.preventDefault();
+useEffect(()=>{
 
-    if (!isAuthenticated) {
+const savedWishlist=
 
-      alert(
-        "Please login first"
-      );
+localStorage.getItem(
 
-      navigate("/login");
+"campuscart-wishlist"
 
-      return;
+);
 
-    }
+if(savedWishlist){
 
-    if (
-      user?.role !== "Buyer"
-    ) return;
+const wishlistIds=
 
-    const savedWishlist =
-      localStorage.getItem(
-        "campuscart-wishlist"
-      );
+JSON.parse(
 
-    let wishlistIds =
-      savedWishlist
+savedWishlist
 
-        ? JSON.parse(
-            savedWishlist
-          )
+);
 
-        : [];
+setIsWishlisted(
 
-    if (
-      wishlistIds.includes(
-        product._id
-      )
-    ) {
+wishlistIds.includes(
 
-      wishlistIds =
-        wishlistIds.filter(
+product._id
 
-          (id: string) =>
+)
 
-            id !==
-            product._id
+);
 
-        );
+}
 
-      setIsWishlisted(
-        false
-      );
+},[product._id]);
 
-    } else {
+const toggleWishlist=(
 
-      wishlistIds.push(
-        product._id
-      );
+e:React.MouseEvent
 
-      setIsWishlisted(
-        true
-      );
+)=>{
 
-    }
+e.preventDefault();
 
-    localStorage.setItem(
+if(
 
-      "campuscart-wishlist",
+!isAuthenticated
 
-      JSON.stringify(
-        wishlistIds
-      )
+){
 
-    );
+alert(
 
-    onWishlistToggle?.(
-      product._id
-    );
+"Please login first"
 
-  };
+);
 
-  return (
+navigate(
 
-    <Link
+"/login"
 
-      to={`/product/${product._id}`}
+);
 
-      className="group block"
+return;
 
-    >
+}
 
-      <div className="relative overflow-hidden rounded-3xl bg-white border shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
+if(
 
-        {/* IMAGE */}
+user?.role!=="Buyer"
 
-        <div className="relative h-64 overflow-hidden">
+){
 
-          <img
+return;
 
-            src={
-              product.images?.[0]
+}
 
-                ? product.images[0]
+const savedWishlist=
 
-                : "/logo.png"
-            }
+localStorage.getItem(
 
-            alt={product.title}
+"campuscart-wishlist"
 
-            className="w-full h-full object-cover group-hover:scale-110 transition duration-700"
+);
 
-          />
+let wishlistIds=
 
-          {/* SOLD */}
+savedWishlist
 
-          {product.isSold && (
+?
 
-            <div className="absolute top-4 left-4 bg-green-600 text-white px-4 py-2 rounded-full text-xs font-bold flex gap-1 items-center">
+JSON.parse(
 
-              <CheckCircle
-                size={14}
-              />
+savedWishlist
 
-              SOLD
+)
 
-            </div>
+:[];
 
-          )}
+if(
 
-          {!product.isSold && (
+wishlistIds.includes(
 
-            <div className="absolute top-4 left-4 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
+product._id
 
-              {
-                product.condition
-              }
+)
 
-            </div>
+){
 
-          )}
+wishlistIds=
 
-          {/* BUYER ONLY */}
+wishlistIds.filter(
 
-          {user?.role ===
-            "Buyer" && (
+(id:string)=>
 
-            <button
+id!==product._id
 
-              onClick={
-                toggleWishlist
-              }
+);
 
-              className="absolute top-4 right-4 bg-white p-3 rounded-2xl shadow-lg"
+setIsWishlisted(
 
-            >
+false
 
-              <Heart
+);
 
-                className={`w-5 h-5 ${
-                  isWishlisted
+}
 
-                    ? "fill-red-500 text-red-500"
+else{
 
-                    : "text-gray-600"
-                }`}
+wishlistIds.push(
 
-              />
+product._id
 
-            </button>
+);
 
-          )}
+setIsWishlisted(
 
-        </div>
+true
 
-        {/* CONTENT */}
+);
 
-        <div className="p-5">
+}
 
-          <div className="flex justify-between mb-3">
+localStorage.setItem(
 
-            <span className="bg-indigo-100 text-indigo-700 text-xs px-3 py-1 rounded-full">
+"campuscart-wishlist",
 
-              {
-                product.category
-              }
+JSON.stringify(
 
-            </span>
+wishlistIds
 
-            <span className="text-xs text-gray-500">
+)
 
-              {
-                product.campus
-              }
+);
 
-            </span>
+onWishlistToggle?.(
 
-          </div>
+product._id
 
-          <h3 className="text-xl font-bold line-clamp-2">
+);
 
-            {product.title}
+};
 
-          </h3>
+const isTrending=
 
-          <p className="text-gray-500 text-sm mt-2 line-clamp-2">
+(product.views||0)
 
-            {
-              product.description
-            }
+>200;
 
-          </p>
+return(
 
-          <div className="flex gap-4 mt-4 text-gray-500 text-sm">
+<Link
 
-            <div className="flex gap-1">
+to={`/product/${product._id}`}
 
-              <Eye size={15} />
+className="group block"
 
-              {product.views || 0}
+>
 
-            </div>
+<div className="relative overflow-hidden rounded-3xl bg-white border shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
 
-          </div>
+{/* IMAGE */}
 
-          <div className="flex items-center gap-2 mt-4">
+<div className="relative h-64 overflow-hidden">
 
-            <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
+<img
 
-              <User
-                size={14}
-              />
+src={
 
-            </div>
+product.images?.[0]
 
-            <div>
+?
 
-              <p className="text-sm font-semibold">
+product.images[0]
 
-                {
-                  product.seller?.name
-                }
+:
 
-              </p>
+"/logo.png"
 
-              <p className="text-xs text-gray-500">
+}
 
-                Verified Seller
+alt={product.title}
 
-              </p>
+className="w-full h-full object-cover group-hover:scale-110 transition duration-700"
 
-            </div>
+/>
 
-          </div>
+{/* SOLD */}
 
-          <div className="flex justify-between items-center mt-5">
+{product.isSold&&(
 
-            <div>
+<div className="absolute top-4 left-4 bg-green-600 text-white px-4 py-2 rounded-full text-xs font-bold flex gap-1 items-center">
 
-              <p className="text-3xl font-extrabold text-green-600">
+<CheckCircle
 
-                ₹
+size={14}
 
-                {product.price.toLocaleString()}
+/>
 
-              </p>
+SOLD
 
-            </div>
+</div>
 
-            {/* BUYER ONLY */}
+)}
 
-            {user?.role ===
-              "Buyer" && (
+{/* CONDITION */}
 
-              <button
+{!product.isSold&&(
 
-                className="bg-indigo-600 text-white p-3 rounded-xl"
+<div className="absolute top-4 left-4 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
 
-              >
+{product.condition}
 
-                <MessageCircle
-                  size={18}
-                />
+</div>
 
-              </button>
+)}
 
-            )}
+{/* TRENDING */}
 
-          </div>
+{isTrending&&(
 
-        </div>
+<div className="absolute bottom-4 left-4 bg-orange-500 text-white px-3 py-1 rounded-full text-xs flex items-center gap-1">
 
-      </div>
+<TrendingUp
 
-    </Link>
+size={14}
 
-  );
+/>
+
+Trending
+
+</div>
+
+)}
+
+{/* WISHLIST */}
+
+{user?.role==="Buyer"&&(
+
+<button
+
+onClick={
+
+toggleWishlist
+
+}
+
+className="absolute top-4 right-4 bg-white p-3 rounded-2xl shadow-lg"
+
+>
+
+<Heart
+
+className={`w-5 h-5 ${
+
+isWishlisted
+
+?
+
+"fill-red-500 text-red-500"
+
+:
+
+"text-gray-600"
+
+}`}
+
+/>
+
+</button>
+
+)}
+
+</div>
+
+{/* CONTENT */}
+
+<div className="p-5">
+
+<div className="flex justify-between mb-3">
+
+<span className="bg-indigo-100 text-indigo-700 text-xs px-3 py-1 rounded-full">
+
+{product.category}
+
+</span>
+
+<span className="text-xs text-gray-500">
+
+{product.campus}
+
+</span>
+
+</div>
+
+<h3 className="text-xl font-bold line-clamp-2">
+
+{product.title}
+
+</h3>
+
+<p className="text-gray-500 text-sm mt-2 line-clamp-2">
+
+{product.description}
+
+</p>
+
+{/* STATS */}
+
+<div className="flex gap-4 mt-4 text-gray-500 text-sm">
+
+<div className="flex gap-1 items-center">
+
+<Eye size={15}/>
+
+{product.views||0}
+
+</div>
+
+<div className="flex gap-1 items-center">
+
+<Star
+
+size={15}
+
+fill="gold"
+
+/>
+
+{product.rating||4.5}
+
+</div>
+
+</div>
+
+{/* NEGOTIABLE */}
+
+{product.negotiable&&(
+
+<div className="mt-3 inline-flex items-center gap-1 bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs">
+
+<BadgeIndianRupee
+
+size={14}
+
+/>
+
+Negotiable
+
+</div>
+
+)}
+
+{/* SELLER */}
+
+<div className="flex items-center gap-2 mt-4">
+
+<div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
+
+<User
+
+size={14}
+
+/>
+
+</div>
+
+<div>
+
+<p className="text-sm font-semibold">
+
+{product.seller?.name}
+
+</p>
+
+<p className="text-xs text-gray-500">
+
+Verified Seller
+
+</p>
+
+</div>
+
+</div>
+
+{/* PRICE */}
+
+<div className="flex justify-between items-center mt-5">
+
+<div>
+
+<p className="text-3xl font-extrabold text-green-600">
+
+₹
+
+{product.price.toLocaleString()}
+
+</p>
+
+</div>
+
+{user?.role==="Buyer"&&(
+
+<button
+
+className="bg-indigo-600 text-white p-3 rounded-xl hover:bg-indigo-700"
+
+>
+
+<MessageCircle
+
+size={18}
+
+/>
+
+</button>
+
+)}
+
+</div>
+
+</div>
+
+</div>
+
+</Link>
+
+);
 
 };
 

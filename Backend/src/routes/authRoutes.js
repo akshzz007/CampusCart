@@ -1,30 +1,63 @@
 import express from "express";
 
 import {
-  registerUser,
-  loginUser,
-  getMe,
+
+registerUser,
+
+loginUser,
+
+getMe,
+
+googleAuth,
+
 } from "../controllers/authController.js";
 
 import protect from "../middleware/authMiddleware.js";
 
 const router =
-  express.Router();
+
+express.Router();
+
+/* REGISTER */
 
 router.post(
-  "/register",
-  registerUser
+
+"/register",
+
+registerUser
+
 );
 
+/* LOGIN */
+
 router.post(
-  "/login",
-  loginUser
+
+"/login",
+
+loginUser
+
 );
+
+/* GOOGLE AUTH */
+
+router.post(
+
+"/google-auth",
+
+googleAuth
+
+);
+
+/* GET USER */
 
 router.get(
-  "/me",
-  protect,
-  getMe
+
+"/me",
+
+protect,
+
+getMe
+
 );
 
 export default router;
