@@ -6,7 +6,7 @@ import {
   Heart, MessageCircle, Plus, User, Package, BarChart3,
   LogOut, Menu, X, ChevronDown,
 } from "lucide-react";
-import logo from "../../assets/logo.png";
+import logo from "../../assets/Logo.png";
 import { useAuth } from "../../context/AuthContext";
 
 const Navbar = () => {
