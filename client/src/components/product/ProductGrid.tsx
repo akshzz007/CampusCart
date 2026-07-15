@@ -1,30 +1,16 @@
-import {
-  Link,
-} from "react-router-dom";
-
-import {
-  useEffect,
-} from "react";
-
-
+import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
 import { useProducts } from "../../context/ProductContext";
 import ProductCard from "./ProductCard";
 
 const ProductGrid = () => {
-const {
-  products,
-  fetchProducts,
-} = useProducts();
+  const { products } = useProducts();
 
-const featuredProducts =
-  products.slice(0, 8);
-
+  const featuredProducts = products.slice(0, 8);
 
   return (
     <section className="w-full">
-
       {featuredProducts.length === 0 && (
         <div className="flex min-h-[320px] flex-col items-center justify-center rounded-3xl border border-dashed border-[#E7E7E7] bg-white px-6 text-center shadow-sm">
           <h2 className="text-3xl font-bold text-[#232F3E]">
@@ -39,13 +25,11 @@ const featuredProducts =
 
       {featuredProducts.length > 0 && (
         <>
-       <div className="grid auto-rows-fr grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">            {featuredProducts.map((product) => (
-         <div className="h-full">
-    <ProductCard
-        key={product._id}
-        product={product}
-    />
-</div>
+          <div className="grid auto-rows-fr grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+            {featuredProducts.map((product) => (
+              <div key={product._id} className="h-full">
+                <ProductCard product={product} />
+              </div>
             ))}
           </div>
 

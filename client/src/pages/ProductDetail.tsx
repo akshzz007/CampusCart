@@ -1,4 +1,5 @@
 import { Link, useParams } from "react-router-dom";
+
 import {
   ArrowLeft,
   CalendarDays,
@@ -7,7 +8,6 @@ import {
   MessageCircle,
   ShieldCheck,
   Tag,
-  User,
 } from "lucide-react";
 
 import { useAuth } from "../context/AuthContext";

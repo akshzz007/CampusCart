@@ -1,4 +1,4 @@
-import { Package, Trash2, IndianRupee, Plus, CheckCircle, TrendingUp, Eye, X } from "lucide-react";
+import { Package, Trash2, IndianRupee, Plus, TrendingUp, Eye, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "sonner";

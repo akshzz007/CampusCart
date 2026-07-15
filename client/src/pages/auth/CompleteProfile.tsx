@@ -2,7 +2,7 @@ import Select from "react-select";
 import colleges from "../../data/colleges.json";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Eye, EyeOff, CheckCircle } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
 import { useAuth } from "../../context/AuthContext";

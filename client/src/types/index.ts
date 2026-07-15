@@ -7,10 +7,9 @@ export interface User {
   phone?: string;
   avatar?: string;
 
-  college: string;
-  city: string;
-  state: string;
-
+  college?: string;
+  city?: string;
+  state?: string;
 
   role: "Buyer" | "Seller";
 
@@ -18,13 +17,13 @@ export interface User {
 
   profileCompleted?: boolean;
 
-averageRating?: number;
+  averageRating?: number;
 
-ratings?: {
-  buyer: string;
-  rating: number;
-  review: string;
-}[];
+  ratings?: {
+    buyer: string;
+    rating: number;
+    review: string;
+  }[];
 
   createdAt?: string;
 }
@@ -42,10 +41,10 @@ export interface Product {
   buyer?: {
     _id: string;
     name: string;
-    email: string;
-    college: string;
-    city: string;
-    state: string;
+    email?: string;
+    college?: string;
+    city?: string;
+    state?: string;
   } | null;
 
   images: string[];
@@ -71,23 +70,24 @@ export interface Product {
     | "Hostel Essentials"
     | "Lab Equipment";
 
-  college: string;
-  city: string;
-  state: string;
-campus?: string;
-
-
-seller: {
-  _id: string;
-  name: string;
-  email: string;
-  college: string;
-  city: string;
-  state: string;
+  college?: string;
+  city?: string;
+  state?: string;
   campus?: string;
-  avatar?: string;
-  averageRating?: number;
-};
+
+  seller: {
+    _id: string;
+    name: string;
+
+    email?: string;
+    college?: string;
+    city?: string;
+    state?: string;
+
+    campus?: string;
+    avatar?: string;
+    averageRating?: number;
+  };
 
   views?: number;
   wishlistCount?: number;
@@ -95,8 +95,7 @@ seller: {
 
   rating?: number;
   ratingByBuyer?: number;
-
-reviewByBuyer?: string;
+  reviewByBuyer?: string;
 
   negotiable?: boolean;
   isFeatured?: boolean;

@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Package, IndianRupee, ShoppingBag, Eye, TrendingUp, BarChart3, ArrowRight } from "lucide-react";
+import {
+  Package,
+  IndianRupee,
+  ShoppingBag,
+  TrendingUp,
+  BarChart3,
+  ArrowRight,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
 const SellerDashboard = () => {
