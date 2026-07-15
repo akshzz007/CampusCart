@@ -10,14 +10,13 @@ import type { User } from "../types";
 
 interface AuthContextType {
   user: User | null;
-
   token: string | null;
-
-  isAuthenticated: boolean;
 
   loading: boolean;
 
   isGuest: boolean;
+
+  isAuthenticated: boolean;
 
   login: (
     userData: User,
@@ -25,6 +24,9 @@ interface AuthContextType {
   ) => void;
 
   logout: () => void;
+  setUser: (
+  user: User | null
+) => void;
 
   setGuest: (
     value: boolean
@@ -41,19 +43,21 @@ export const AuthProvider = ({
 }: {
   children: ReactNode;
 }) => {
+
   const [user, setUser] =
     useState<User | null>(null);
 
   const [token, setToken] =
     useState<string | null>(null);
 
-  const [isGuest, setIsGuest] =
-    useState(false);
-
   const [loading, setLoading] =
     useState(true);
 
+  const [isGuest, setIsGuest] =
+    useState(false);
+
   useEffect(() => {
+
     const savedUser =
       localStorage.getItem(
         "campuscart-user"
@@ -70,51 +74,62 @@ export const AuthProvider = ({
       );
 
     if (savedUser) {
+
       setUser(
         JSON.parse(savedUser)
       );
+
     }
 
     if (savedToken) {
+
       setToken(savedToken);
+
     }
 
     if (savedGuest === "true") {
+
       setIsGuest(true);
+
     }
 
     setLoading(false);
+
   }, []);
 
   const login = (
     userData: User,
     userToken?: string
   ) => {
+
     setUser(userData);
 
     if (userToken) {
+
       setToken(userToken);
 
       localStorage.setItem(
         "token",
         userToken
       );
+
     }
 
     setIsGuest(false);
 
     localStorage.setItem(
       "campuscart-user",
-
       JSON.stringify(userData)
     );
 
     localStorage.removeItem(
       "campuscart-guest"
     );
+
   };
 
   const logout = () => {
+
     setUser(null);
 
     setToken(null);
@@ -132,29 +147,40 @@ export const AuthProvider = ({
     localStorage.removeItem(
       "campuscart-guest"
     );
+
   };
 
-  const handleGuest = (
+  const setGuest = (
     value: boolean
   ) => {
+
     setIsGuest(value);
 
     if (value) {
+
       localStorage.setItem(
         "campuscart-guest",
-
         "true"
       );
-    } else {
+
+    }
+
+    else {
+
       localStorage.removeItem(
         "campuscart-guest"
       );
+
     }
+
   };
 
   return (
+
     <AuthContext.Provider
+
       value={{
+
         user,
 
         token,
@@ -163,33 +189,39 @@ export const AuthProvider = ({
 
         isGuest,
 
-        login,
-
-        logout,
-
-        setGuest:
-          handleGuest,
-
-        // 👇 IMPORTANT CHANGE
-
         isAuthenticated:
           !!user && !isGuest,
+
+        login,
+logout,
+setGuest,
+setUser,
+
       }}
+
     >
+
       {children}
+
     </AuthContext.Provider>
+
   );
+
 };
 
 export const useAuth = () => {
+
   const context =
     useContext(AuthContext);
 
   if (!context) {
+
     throw new Error(
       "useAuth must be used within AuthProvider"
     );
+
   }
 
   return context;
+
 };

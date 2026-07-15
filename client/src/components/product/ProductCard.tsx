@@ -1,515 +1,157 @@
 import type { Product } from "../../types";
+import { Heart, CheckCircle2, User, MessageCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
-import {
-Heart,
-Eye,
-CheckCircle,
-User,
-MessageCircle,
-TrendingUp,
-Star,
-BadgeIndianRupee,
-} from "lucide-react";
-
-import {
-useEffect,
-useState,
-} from "react";
-
-import {
-Link,
-useNavigate,
-} from "react-router-dom";
-
-import { useAuth }
-
-from "../../context/AuthContext";
-
-interface Props{
-
-product:Product;
-
-onWishlistToggle?:(
-id:string
-
-)=>void;
-
+interface Props {
+  product: Product;
+  onWishlistToggle?: (id: string) => void;
 }
 
-const ProductCard=({
+const getWishlistKey = (userId: string) => `campuscart-wishlist-${userId}`;
 
-product,
+const ProductCard = ({ product, onWishlistToggle }: Props) => {
+  const { isAuthenticated, user } = useAuth();
+  const navigate = useNavigate();
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
-onWishlistToggle,
+  useEffect(() => {
+    if (!user?._id) return;
+    const key = getWishlistKey(user._id);
+    const saved = localStorage.getItem(key);
+    if (!saved) return;
+    const ids: string[] = JSON.parse(saved);
+    setIsWishlisted(ids.includes(product._id));
+  }, [product._id, user?._id]);
 
-}:Props)=>{
+  const toggleWishlist = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isAuthenticated || !user) { navigate("/login"); return; }
+    if (user.role !== "Buyer") return;
 
-const {
+    const key = getWishlistKey(user._id);
+    const saved = localStorage.getItem(key);
+    let ids: string[] = saved ? JSON.parse(saved) : [];
 
-isAuthenticated,
+    if (ids.includes(product._id)) {
+      ids = ids.filter(id => id !== product._id);
+      setIsWishlisted(false);
+    } else {
+      ids.push(product._id);
+      setIsWishlisted(true);
+    }
+    localStorage.setItem(key, JSON.stringify(ids));
+    onWishlistToggle?.(product._id);
+  };
 
-user,
+  return (
+    <Link
+      to={`/product/${product._id}`}
+      className="group flex h-full w-full flex-col overflow-hidden rounded-[18px] border border-[#ECEAE4] bg-white shadow-[0_2px_10px_rgba(20,25,33,0.05)] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:border-[#F3A847]/50 hover:shadow-[0_22px_44px_rgba(35,47,62,0.13)]"
+    >
+      {/* IMAGE LAYER */}
+      <div className="relative aspect-square w-full overflow-hidden bg-[#F6F5F1]">
+        <img
+          src={product.images?.[0] || "/logo.png"}
+          alt={product.title}
+          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06]"
+        />
 
-}=useAuth();
+        {/* subtle top gradient so badges stay legible on bright photos */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/25 to-transparent" />
 
-const navigate=
+        {/* Badges Layer */}
+        <div className="absolute inset-x-3 top-3 flex items-center justify-between">
+          {!product.isSold ? (
+            <span className="rounded-full bg-[#232F3E]/85 px-3 py-1 text-[10px] font-bold tracking-wide text-white uppercase shadow-sm backdrop-blur-md">
+              {product.condition}
+            </span>
+          ) : (
+            <span className="flex items-center gap-1 rounded-full bg-emerald-600 px-3 py-1 text-[10px] font-bold tracking-wide text-white uppercase shadow-sm">
+              <CheckCircle2 size={10} /> Sold
+            </span>
+          )}
 
-useNavigate();
+          {/* Wishlist Icon Button */}
+          {user?.role === "Buyer" && (
+            <button
+              onClick={toggleWishlist}
+              aria-label="Toggle Wishlist"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-gray-500 shadow-md backdrop-blur-md transition-all duration-200 hover:scale-110 hover:text-red-500 active:scale-95"
+            >
+              <Heart
+                size={15}
+                className={isWishlisted ? "fill-red-500 text-red-500" : "transition-colors"}
+              />
+            </button>
+          )}
+        </div>
+      </div>
 
-const [
+      {/* CARD CONTENT BODY */}
+      <div className="flex flex-1 flex-col p-5">
+        {/* Category Pill */}
+        <span className="mb-2.5 w-fit rounded-md bg-[#FFF3DB] px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-wide text-[#C88400]">
+          {product.category}
+        </span>
 
-isWishlisted,
+        {/* Title Heading */}
+        <h3 className="line-clamp-1 text-[15.5px] font-bold leading-snug text-gray-900 transition-colors duration-200 group-hover:text-[#232F3E]">
+          {product.title}
+        </h3>
 
-setIsWishlisted,
+        {/* Description Paragraph */}
+        <p className="mt-1.5 line-clamp-2 min-h-[32px] text-[12.5px] leading-relaxed text-gray-400">
+          {product.description}
+        </p>
 
-]=useState(false);
+        {/* Info & CTA Footer Section */}
+        <div className="mt-4 flex items-end justify-between gap-3 border-t border-gray-50 pt-4">
+          <div className="flex min-w-0 items-center gap-2">
+            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gray-100 bg-gray-50">
+              <User size={12} className="text-gray-400" />
+            </div>
+            <p className="truncate text-xs font-semibold text-gray-600">
+              {product.seller?.name}
+            </p>
+          </div>
 
-useEffect(()=>{
+          <div className="shrink-0 text-right">
+            <p className="text-[11px] font-medium text-gray-400">
+              {product.isSold ? "Sold For" : "Price"}
+            </p>
+            <p className="text-xl font-black tracking-tight text-[#232F3E]">
+              ₹{product.isSold
+                ? product.soldPrice?.toLocaleString()
+                : product.price.toLocaleString()}
+            </p>
+          </div>
+        </div>
 
-const savedWishlist=
-
-localStorage.getItem(
-
-"campuscart-wishlist"
-
+        {/* Action Button Segment */}
+        {user?.role === "Buyer" && !product.isSold && (
+          <button
+            onClick={e => {
+              e.preventDefault();
+             navigate(
+  `/messages?seller=${product.seller._id}&product=${product._id}&sellerName=${encodeURIComponent(
+    product.seller.name
+  )}&productTitle=${encodeURIComponent(product.title)}`
 );
 
-if(savedWishlist){
-
-const wishlistIds=
-
-JSON.parse(
-
-savedWishlist
-
-);
-
-setIsWishlisted(
-
-wishlistIds.includes(
-
-product._id
-
-)
-
-);
-
-}
-
-},[product._id]);
-
-const toggleWishlist=(
-
-e:React.MouseEvent
-
-)=>{
-
-e.preventDefault();
-
-if(
-
-!isAuthenticated
-
-){
-
-alert(
-
-"Please login first"
-
-);
-
-navigate(
-
-"/login"
-
-);
-
-return;
-
-}
-
-if(
-
-user?.role!=="Buyer"
-
-){
-
-return;
-
-}
-
-const savedWishlist=
-
-localStorage.getItem(
-
-"campuscart-wishlist"
-
-);
-
-let wishlistIds=
-
-savedWishlist
-
-?
-
-JSON.parse(
-
-savedWishlist
-
-)
-
-:[];
-
-if(
-
-wishlistIds.includes(
-
-product._id
-
-)
-
-){
-
-wishlistIds=
-
-wishlistIds.filter(
-
-(id:string)=>
-
-id!==product._id
-
-);
-
-setIsWishlisted(
-
-false
-
-);
-
-}
-
-else{
-
-wishlistIds.push(
-
-product._id
-
-);
-
-setIsWishlisted(
-
-true
-
-);
-
-}
-
-localStorage.setItem(
-
-"campuscart-wishlist",
-
-JSON.stringify(
-
-wishlistIds
-
-)
-
-);
-
-onWishlistToggle?.(
-
-product._id
-
-);
-
+            }}
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-[#232F3E]/10 bg-[#F7F7F5] py-2.5 text-xs font-bold text-gray-700 transition-all duration-200 hover:border-[#232F3E] hover:bg-[#232F3E] hover:text-white"
+          >
+            <MessageCircle size={13} />
+            <span>Contact Seller</span>
+          </button>
+        )}
+      </div>
+    </Link>
+  );
 };
 
-const isTrending=
-
-(product.views||0)
-
->200;
-
-return(
-
-<Link
-
-to={`/product/${product._id}`}
-
-className="group block"
-
->
-
-<div className="relative overflow-hidden rounded-3xl bg-white border shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
-
-{/* IMAGE */}
-
-<div className="relative h-64 overflow-hidden">
-
-<img
-
-src={
-
-product.images?.[0]
-
-?
-
-product.images[0]
-
-:
-
-"/logo.png"
-
-}
-
-alt={product.title}
-
-className="w-full h-full object-cover group-hover:scale-110 transition duration-700"
-
-/>
-
-{/* SOLD */}
-
-{product.isSold&&(
-
-<div className="absolute top-4 left-4 bg-green-600 text-white px-4 py-2 rounded-full text-xs font-bold flex gap-1 items-center">
-
-<CheckCircle
-
-size={14}
-
-/>
-
-SOLD
-
-</div>
-
-)}
-
-{/* CONDITION */}
-
-{!product.isSold&&(
-
-<div className="absolute top-4 left-4 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
-
-{product.condition}
-
-</div>
-
-)}
-
-{/* TRENDING */}
-
-{isTrending&&(
-
-<div className="absolute bottom-4 left-4 bg-orange-500 text-white px-3 py-1 rounded-full text-xs flex items-center gap-1">
-
-<TrendingUp
-
-size={14}
-
-/>
-
-Trending
-
-</div>
-
-)}
-
-{/* WISHLIST */}
-
-{user?.role==="Buyer"&&(
-
-<button
-
-onClick={
-
-toggleWishlist
-
-}
-
-className="absolute top-4 right-4 bg-white p-3 rounded-2xl shadow-lg"
-
->
-
-<Heart
-
-className={`w-5 h-5 ${
-
-isWishlisted
-
-?
-
-"fill-red-500 text-red-500"
-
-:
-
-"text-gray-600"
-
-}`}
-
-/>
-
-</button>
-
-)}
-
-</div>
-
-{/* CONTENT */}
-
-<div className="p-5">
-
-<div className="flex justify-between mb-3">
-
-<span className="bg-indigo-100 text-indigo-700 text-xs px-3 py-1 rounded-full">
-
-{product.category}
-
-</span>
-
-<span className="text-xs text-gray-500">
-
-{product.campus}
-
-</span>
-
-</div>
-
-<h3 className="text-xl font-bold line-clamp-2">
-
-{product.title}
-
-</h3>
-
-<p className="text-gray-500 text-sm mt-2 line-clamp-2">
-
-{product.description}
-
-</p>
-
-{/* STATS */}
-
-<div className="flex gap-4 mt-4 text-gray-500 text-sm">
-
-<div className="flex gap-1 items-center">
-
-<Eye size={15}/>
-
-{product.views||0}
-
-</div>
-
-<div className="flex gap-1 items-center">
-
-<Star
-
-size={15}
-
-fill="gold"
-
-/>
-
-{product.rating||4.5}
-
-</div>
-
-</div>
-
-{/* NEGOTIABLE */}
-
-{product.negotiable&&(
-
-<div className="mt-3 inline-flex items-center gap-1 bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs">
-
-<BadgeIndianRupee
-
-size={14}
-
-/>
-
-Negotiable
-
-</div>
-
-)}
-
-{/* SELLER */}
-
-<div className="flex items-center gap-2 mt-4">
-
-<div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
-
-<User
-
-size={14}
-
-/>
-
-</div>
-
-<div>
-
-<p className="text-sm font-semibold">
-
-{product.seller?.name}
-
-</p>
-
-<p className="text-xs text-gray-500">
-
-Verified Seller
-
-</p>
-
-</div>
-
-</div>
-
-{/* PRICE */}
-
-<div className="flex justify-between items-center mt-5">
-
-<div>
-
-<p className="text-3xl font-extrabold text-green-600">
-
-₹
-
-{product.price.toLocaleString()}
-
-</p>
-
-</div>
-
-{user?.role==="Buyer"&&(
-
-<button
-
-className="bg-indigo-600 text-white p-3 rounded-xl hover:bg-indigo-700"
-
->
-
-<MessageCircle
-
-size={18}
-
-/>
-
-</button>
-
-)}
-
-</div>
-
-</div>
-
-</div>
-
-</Link>
-
-);
-
-};
-
+export { getWishlistKey };
 export default ProductCard;

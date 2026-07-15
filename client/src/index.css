@@ -1,130 +1,809 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=DM+Serif+Display:ital@0;1&display=swap");
 @import "tailwindcss";
 
+/* =========================================================
+   THEME
+========================================================= */
+
 @theme {
-    --color-app-green: #1b3022;
-    --color-app-green-light: #2d4a35;
-    --color-app-green-lighter: #3d6b4a;
-    --color-app-orange: #f97316;
-    --color-app-orange-dark: #ea580c;
-    --color-app-cream: #faf7f2;
-    --color-app-cream-dark: #f0ebe3;
-    --color-app-text: #1b3022;
-    --color-app-text-light: #6b7280;
-    --color-app-border: #e5e7eb;
-    --color-app-success: #22c55e;
-    --color-app-error: #ef4444;
-    --color-app-warning: #f59e0b;
 
-    --font-sans: "Outfit", sans-serif;
-    --font-serif: "DM Serif Display", serif;
+    --color-primary:#232F3E;
+    --color-secondary:#F3A847;
+
+    --color-bg:#FAFAFA;
+    --color-card:#FFFFFF;
+
+    --font-sans:"Outfit",sans-serif;
+    --font-serif:"DM Serif Display",serif;
+
 }
 
-body {
-    font-family: var(--font-sans);
-    color: var(--color-app-text);
-    background-color: var(--color-app-cream);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+*{
+
+margin:0;
+padding:0;
+box-sizing:border-box;
+
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+html{
+
+scroll-behavior:smooth;
+
 }
 
-::-webkit-scrollbar-track {
-    background: var(--color-app-cream);
+body{
+
+font-family:var(--font-sans);
+
+background:#FAFAFA;
+
+color:#1F2937;
+
+overflow-x:hidden;
+
+-webkit-font-smoothing:antialiased;
+
+-moz-osx-font-smoothing:grayscale;
+
 }
 
-::-webkit-scrollbar-thumb {
-    background: var(--color-app-green-lighter);
-    border-radius: 3px;
+/* Selection */
+
+::selection{
+
+background:#F3A847;
+
+color:white;
+
 }
 
-.no-scrollbar::-webkit-scrollbar {
-    display: none;
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+::-webkit-scrollbar{
+
+width:8px;
+
+height:8px;
+
 }
 
-/* Smooth transitions globally */
-a,
-button {
-    transition: all 0.2s ease;
-    cursor: pointer;
-}
-input:focus {
-    outline: none;
+::-webkit-scrollbar-track{
+
+background:#F5F5F5;
+
 }
 
-.flex-center {
-    @apply flex items-center justify-center;
+::-webkit-scrollbar-thumb{
+
+background:#F3A847;
+
+border-radius:999px;
+
 }
 
-.dropdown-link {
-    @apply flex items-center gap-3 px-4 py-2.5 text-sm text-zinc-500 hover:bg-orange-50/80 hover:text-zinc-900 transition-colors;
+::-webkit-scrollbar-thumb:hover{
+
+background:#E39524;
+
 }
 
-/* Animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
+/* =========================================================
+   COMMON
+========================================================= */
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+a{
+
+text-decoration:none;
+
+transition:.3s;
+
 }
 
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(100%);
-    }
+button{
 
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+transition:.3s;
+
+cursor:pointer;
+
 }
 
-@keyframes slideInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
+img{
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+user-select:none;
+
+-webkit-user-drag:none;
+
 }
 
-@keyframes pulse-soft {
-    0%,
-    100% {
-        opacity: 1;
-    }
+input:focus{
 
-    50% {
-        opacity: 0.7;
-    }
+outline:none;
+
 }
 
-.animate-fade-in {
-    animation: fadeIn 0.4s ease-out forwards;
+.flex-center{
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
 }
 
-.animate-slide-in-right {
-    animation: slideInRight 0.3s ease-out forwards;
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero-glow{
+
+position:absolute;
+
+width:620px;
+
+height:620px;
+
+border-radius:999px;
+
+background:rgba(243,168,71,.28);
+
+filter:blur(100px);
+
 }
 
-.animate-slide-in-up {
-    animation: slideInUp 0.4s ease-out forwards;
+/* Floating Image */
+
+@keyframes float{
+
+0%{
+
+transform:translateY(0px);
+
 }
 
-.animate-pulse-soft {
-    animation: pulse-soft 2s ease-in-out infinite;
+50%{
+
+transform:translateY(-14px);
+
 }
+
+100%{
+
+transform:translateY(0px);
+
+}
+
+}
+
+.animate-float{
+
+animation:float 5s ease-in-out infinite;
+
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn-primary{
+
+background:#F3A847;
+
+color:#111827;
+
+font-weight:700;
+
+transition:.3s;
+
+}
+
+.btn-primary:hover{
+
+background:#E89A27;
+
+transform:translateY(-2px);
+
+}
+
+.btn-dark{
+
+background:#232F3E;
+
+color:white;
+
+transition:.3s;
+
+}
+
+.btn-dark:hover{
+
+background:#344559;
+
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.shadow-card{
+
+box-shadow:
+
+0 8px 25px rgba(0,0,0,.05),
+
+0 18px 50px rgba(0,0,0,.05);
+
+}
+
+.card-hover{
+
+transition:.35s;
+
+}
+
+.card-hover:hover{
+
+transform:translateY(-10px);
+
+box-shadow:
+
+0 25px 50px rgba(0,0,0,.12);
+
+}
+
+/* =========================================================
+   CATEGORY SLIDER
+========================================================= */
+
+.category-track{
+
+display:flex;
+
+align-items:center;
+
+gap:28px;
+
+width:max-content;
+
+animation:categoryMove 42s linear infinite;
+
+will-change:transform;
+
+}
+
+.category-track:hover{
+
+animation-play-state:paused;
+
+}
+
+@keyframes categoryMove{
+
+0%{
+
+transform:translateX(0);
+
+}
+
+100%{
+
+transform:translateX(-50%);
+
+}
+
+}
+
+/* Left Fade */
+
+.fade-left{
+
+position:absolute;
+
+left:0;
+
+top:0;
+
+width:120px;
+
+height:100%;
+
+background:linear-gradient(
+90deg,
+#FAFAFA,
+transparent
+);
+
+z-index:20;
+
+pointer-events:none;
+
+}
+
+/* Right Fade */
+
+.fade-right{
+
+position:absolute;
+
+right:0;
+
+top:0;
+
+width:120px;
+
+height:100%;
+
+background:linear-gradient(
+270deg,
+#FAFAFA,
+transparent
+);
+
+z-index:20;
+
+pointer-events:none;
+
+}
+
+/* =========================================================
+   CATEGORY CARD
+========================================================= */
+
+.category-item{
+
+width:190px;
+
+height:220px;
+
+flex-shrink:0;
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+align-items:center;
+
+background:white;
+
+border-radius:30px;
+
+border:1px solid #ECE8DE;
+
+box-shadow:
+
+0 10px 25px rgba(0,0,0,.05);
+
+transition:.35s;
+
+}
+
+.category-item:hover{
+
+transform:translateY(-10px);
+
+border-color:#F3A847;
+
+box-shadow:
+
+0 20px 45px rgba(0,0,0,.12);
+
+}
+
+/* Image */
+
+.category-image{
+
+width:110px;
+
+height:110px;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+border-radius:28px;
+
+background:#FFF8E6;
+
+transition:.35s;
+
+}
+
+.category-item:hover .category-image{
+
+background:#FFF1CF;
+
+}
+
+.category-img{
+
+width:78px;
+
+height:78px;
+
+object-fit:contain;
+
+transition:.35s;
+
+}
+
+.category-item:hover .category-img{
+
+transform:
+
+scale(1.12)
+
+rotate(5deg);
+
+}
+
+/* Title */
+
+.category-item h3{
+
+margin-top:22px;
+
+font-size:18px;
+
+font-weight:700;
+
+color:#232F3E;
+
+text-align:center;
+
+}
+
+/* =========================================================
+   PRODUCT CARD
+========================================================= */
+
+.product-card{
+
+background:white;
+
+border-radius:28px;
+
+border:1px solid #ECECEC;
+
+overflow:hidden;
+
+transition:.35s;
+
+}
+
+.product-card:hover{
+
+transform:translateY(-8px);
+
+box-shadow:
+
+0 20px 55px rgba(0,0,0,.12);
+
+}
+
+.product-image{
+
+overflow:hidden;
+
+}
+
+.product-image img{
+
+transition:.45s;
+
+}
+
+.product-card:hover img{
+
+transform:scale(1.08);
+
+}
+
+/* =========================================================
+   GLASS
+========================================================= */
+
+.glass{
+
+background:rgba(255,255,255,.72);
+
+backdrop-filter:blur(16px);
+
+}
+
+/* =========================================================
+   GRADIENT TEXT
+========================================================= */
+
+.gradient-text{
+
+background:linear-gradient(
+90deg,
+#F3A847,
+#E89822
+);
+
+-webkit-background-clip:text;
+
+-webkit-text-fill-color:transparent;
+
+}
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+.section{
+
+max-width:1500px;
+
+margin:auto;
+
+padding-inline:2rem;
+
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width:1200px){
+
+.category-item{
+
+width:170px;
+height:205px;
+
+}
+
+.category-image{
+
+width:96px;
+height:96px;
+
+}
+
+.category-img{
+
+width:70px;
+height:70px;
+
+}
+
+}
+
+@media (max-width:992px){
+
+.section{
+
+padding-inline:1.5rem;
+
+}
+
+.hero-glow{
+
+width:420px;
+height:420px;
+
+}
+
+}
+
+@media (max-width:768px){
+
+.category-track{
+
+gap:18px;
+
+animation-duration:28s;
+
+}
+
+.category-item{
+
+width:150px;
+height:180px;
+border-radius:22px;
+
+}
+
+.category-image{
+
+width:82px;
+height:82px;
+border-radius:20px;
+
+}
+
+.category-img{
+
+width:58px;
+height:58px;
+
+}
+
+.category-item h3{
+
+font-size:15px;
+
+margin-top:16px;
+
+}
+
+}
+
+@media (max-width:480px){
+
+.category-item{
+
+width:130px;
+height:165px;
+
+}
+
+.category-image{
+
+width:72px;
+height:72px;
+
+}
+
+.category-img{
+
+width:50px;
+height:50px;
+
+}
+
+.category-item h3{
+
+font-size:14px;
+
+}
+
+}
+
+/* =========================================================
+   ANIMATION HELPERS
+========================================================= */
+
+.animate-fade{
+
+animation:fadeUp .6s ease forwards;
+
+}
+
+@keyframes fadeUp{
+
+0%{
+
+opacity:0;
+transform:translateY(25px);
+
+}
+
+100%{
+
+opacity:1;
+transform:translateY(0);
+
+}
+
+}
+
+.animate-scale{
+
+animation:scaleIn .45s ease;
+
+}
+
+@keyframes scaleIn{
+
+0%{
+
+opacity:0;
+transform:scale(.95);
+
+}
+
+100%{
+
+opacity:1;
+transform:scale(1);
+
+}
+
+}
+
+/* =========================================================
+   IMAGE HELPERS
+========================================================= */
+
+.img-hover{
+
+transition:transform .45s ease;
+
+}
+
+.group:hover .img-hover{
+
+transform:scale(1.08);
+
+}
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.nav-blur{
+
+backdrop-filter:blur(18px);
+
+background:rgba(35,47,62,.90);
+
+}
+
+/* =========================================================
+   BUTTON EFFECTS
+========================================================= */
+
+.btn{
+
+transition:.3s;
+
+}
+
+.btn:hover{
+
+transform:translateY(-3px);
+
+box-shadow:
+
+0 12px 25px rgba(0,0,0,.12);
+
+}
+
+/* =========================================================
+   REMOVE BLUE TAP
+========================================================= */
+
+*{
+
+-webkit-tap-highlight-color:transparent;
+
+}
+
+/* =========================================================
+   PREVENT IMAGE DRAG
+========================================================= */
+
+img{
+
+pointer-events:none;
+
+}
+
+/* =========================================================
+   PERFORMANCE
+========================================================= */
+
+.category-track,
+.product-card,
+.category-item,
+.card-hover{
+
+will-change:transform;
+
+}
+

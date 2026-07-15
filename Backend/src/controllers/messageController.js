@@ -280,81 +280,46 @@ export const getMyChats = async (
 
     const chats = [];
 
-    for(
+   for (const msg of messages) {
 
-      const msg
+  // Skip broken references
+  if (!msg.sender || !msg.receiver || !msg.product) {
+    continue;
+  }
 
-      of messages
+  const otherUser =
+    msg.sender._id.toString() === currentUser
+      ? msg.receiver
+      : msg.sender;
 
-    ){
+  if (!otherUser) {
+    continue;
+  }
 
-      const otherUser =
+  const key = `${otherUser._id}-${msg.product._id}`;
 
-      msg.sender._id.toString()
+  if (seen.has(key)) {
+    continue;
+  }
 
-      === currentUser
+  seen.add(key);
 
-      ?
+  const unread = await Message.countDocuments({
+    sender: otherUser._id,
+    receiver: currentUser,
+    product: msg.product._id,
+    isRead: false,
+  });
 
-      msg.receiver
-
-      :
-
-      msg.sender;
-
-      const key =
-
-      `${otherUser._id}-${msg.product._id}`;
-
-      if(
-
-        seen.has(
-
-          key
-
-        )
-
-      ){
-
-        continue;
-
-      }
-
-      seen.add(
-
-        key
-
-      );
-
-      const unread = await Message.countDocuments({
-
-        sender:otherUser._id,
-
-        receiver:currentUser,
-
-        product:msg.product._id,
-
-        isRead:false,
-
-      });
-
-      chats.push({
-
-        id:key,
-
-        user:otherUser,
-
-        product:msg.product,
-
-        lastMessage:msg.text,
-
-        lastMessageTime:msg.createdAt,
-
-        unread,
-
-      });
-
-    }
+  chats.push({
+    id: key,
+    user: otherUser,
+    product: msg.product,
+    lastMessage: msg.text,
+    lastMessageTime: msg.createdAt,
+    unread,
+  });
+}
 
     return res.status(200).json({
 

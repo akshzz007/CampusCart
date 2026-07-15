@@ -1,97 +1,111 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
-{
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
 
-name:{
+    phone: {
+      type: String,
+      default: "",
+      trim: true,
+    },
 
-type:String,
-
-required:true,
-
-trim:true,
-
+avatar: {
+  type: String,
+  default: "",
 },
 
-email:{
+    password: {
+      type: String,
+      required: true,
+    },
 
-type:String,
+    role: {
+      type: String,
+      enum: ["Buyer", "Seller"],
+      default: "Buyer",
+    },
 
-required:true,
+    state: {
+      type: String,
+      default: "",
+      trim: true,
+    },
 
-unique:true,
+    city: {
+      type: String,
+      default: "",
+      trim: true,
+    },
 
-lowercase:true,
+    college: {
+      type: String,
+      default: "",
+      trim: true,
+    },
 
-trim:true,
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
 
+    profileCompleted: {
+  type: Boolean,
+  default: true,
 },
 
-password:{
-
-type:String,
-
-required:true,
-
+averageRating: {
+  type: Number,
+  default: 0,
 },
 
-college:{
-
-type:String,
-
-default:"",
-
-},
-
-campus:{
-
-type:String,
-
-default:"",
-
-},
-
-role:{
-
-type:String,
-
-enum:[
-
-"Buyer",
-
-"Seller",
-
+ratings: [
+  {
+    buyer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5,
+    },
+    review: {
+      type: String,
+      default: "",
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+  },
 ],
 
-default:"Buyer",
-
+resetPasswordToken: {
+  type: String,
 },
 
-isVerified:{
-
-type:Boolean,
-
-default:false,
-
+resetPasswordExpire: {
+  type: Date,
 },
-
-},
-
-{
-
-timestamps:true,
-
-}
-
+  },
+  {
+    timestamps: true,
+  }
 );
 
-const User = mongoose.model(
-
-"User",
-
-userSchema
-
-);
+const User = mongoose.model("User", userSchema);
 
 export default User;

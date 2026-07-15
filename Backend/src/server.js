@@ -1,22 +1,18 @@
 import express from "express";
-
 import cors from "cors";
-
 import dotenv from "dotenv";
-
 import http from "http";
-
 import { Server } from "socket.io";
 
 import connectDB from "./config/db.js";
 
 import authRoutes from "./routes/authRoutes.js";
-
 import productRoutes from "./routes/productRoutes.js";
-
 import messageRoutes from "./routes/messageRoutes.js";
 
 dotenv.config();
+
+console.log("MONGO_URI =", process.env.MONGO_URI);
 
 connectDB();
 

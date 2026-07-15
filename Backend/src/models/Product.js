@@ -5,11 +5,13 @@ const productSchema = new mongoose.Schema(
     title: {
       type: String,
       required: true,
+      trim: true,
     },
 
     description: {
       type: String,
       required: true,
+      trim: true,
     },
 
     price: {
@@ -22,6 +24,12 @@ const productSchema = new mongoose.Schema(
         type: String,
       },
     ],
+
+    category: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
     condition: {
       type: String,
@@ -44,34 +52,36 @@ const productSchema = new mongoose.Schema(
       default: "Available",
     },
 
-    category: {
-      type: String,
-      required: true,
-    },
-
-    campus: {
-      type: String,
-      required: true,
-    },
-
-    city: String,
-
-    state: String,
-
     seller: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
 
-    // NEW
     buyer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       default: null,
     },
 
-    // NEW
+    college: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
+    city: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
+    state: {
+      type: String,
+      default: "",
+      trim: true,
+    },
+
     soldPrice: {
       type: Number,
       default: 0,
@@ -92,7 +102,6 @@ const productSchema = new mongoose.Schema(
       default: false,
     },
 
-    // NEW
     soldAt: {
       type: Date,
       default: null,

@@ -1,259 +1,287 @@
 import { Link } from "react-router-dom";
+import { ShoppingBag, Mail, ShieldCheck, Heart, FileText, HelpCircle, PhoneCall } from "lucide-react";
 
 import { useAuth } from "../../context/AuthContext";
 
 const Footer = () => {
 
-  const { user } =
-    useAuth();
+  const { user } = useAuth();
 
   return (
 
-    <footer className="bg-slate-950 text-white mt-20">
+<footer className="mt-24 bg-[#2C3643] text-white">
 
-      <div className="max-w-7xl mx-auto px-6 py-16">
+<div className="mx-auto max-w-[1500px] px-6 py-16 sm:px-8">
 
-        <div className="grid md:grid-cols-4 gap-10">
+<div className="grid gap-12 md:grid-cols-2 lg:grid-cols-5 lg:gap-8">
 
-          {/* BRAND */}
+{/* BRAND */}
 
-          <div>
+<div className="lg:col-span-2">
 
-            <h2 className="text-3xl font-bold">
+<div className="flex items-center gap-3">
 
-              CampusCart
+<div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F3A847]">
 
-            </h2>
+<ShoppingBag
 
-            <p className="text-gray-400 mt-4 leading-relaxed">
+size={28}
 
-              India's trusted student marketplace.
+className="text-[#232F3E]"
 
-              Buy and sell products safely
+/>
 
-              inside your college community.
+</div>
 
-            </p>
+<div>
 
-          </div>
+<h2 className="text-2xl font-black tracking-tight">
 
-          {/* EXPLORE */}
+CampusCart
 
-          <div>
+</h2>
 
-            <h3 className="font-bold text-xl mb-4">
+<p className="text-sm text-gray-400">
 
-              Explore
+Student Marketplace
 
-            </h3>
+</p>
 
-            <div className="space-y-3 text-gray-400">
+</div>
 
-              <Link
+</div>
 
-                to="/"
+<p className="mt-6 max-w-md text-[15px] leading-7 text-gray-300">
 
-                className="block hover:text-white"
+CampusCart is a trusted marketplace where students
+can safely buy, sell and exchange products inside
+their verified college community.
 
-              >
+</p>
 
-                Home
+<div className="mt-7 flex w-fit items-center gap-3 rounded-xl bg-white/[0.06] px-4 py-3 transition-colors hover:bg-white/10">
 
-              </Link>
+<Mail size={17} className="text-[#F3A847]"/>
 
-              <Link
+<span className="text-sm text-gray-200">
 
-                to="/products"
+support@campuscart.in
 
-                className="block hover:text-white"
+</span>
 
-              >
+</div>
 
-                Browse Products
+</div>
 
-              </Link>
+{/* EXPLORE */}
 
-            </div>
+<div>
 
-          </div>
+<h3 className="mb-5 text-[13px] font-bold uppercase tracking-[0.08em] text-gray-400">
 
-          {/* BUYER */}
+Explore
 
-          {user?.role === "Buyer" && (
+</h3>
 
-            <div>
+<div className="space-y-3.5 text-[14.5px] text-gray-300">
 
-              <h3 className="font-bold text-xl mb-4">
+<Link to="/" className="block transition-colors hover:text-[#F3A847]">
 
-                Buyer
+Home
 
-              </h3>
+</Link>
 
-              <div className="space-y-3 text-gray-400">
+<Link to="/products" className="block transition-colors hover:text-[#F3A847]">
 
-                <Link
+Products
 
-                  to="/wishlist"
+</Link>
 
-                  className="block hover:text-white"
+<Link to="/signup" className="block transition-colors hover:text-[#F3A847]">
 
-                >
+Create Account
 
-                  Wishlist
+</Link>
 
-                </Link>
+<Link to="/login" className="block transition-colors hover:text-[#F3A847]">
 
-                <Link
+Login
 
-                  to="/messages"
+</Link>
 
-                  className="block hover:text-white"
+</div>
 
-                >
+</div>
 
-                  Messages
+{/* ACCOUNT */}
 
-                </Link>
+<div>
 
-                <Link
+<h3 className="mb-5 text-[13px] font-bold uppercase tracking-[0.08em] text-gray-400">
 
-                  to="/purchases"
+Account
 
-                  className="block hover:text-white"
+</h3>
 
-                >
+<div className="space-y-3.5 text-[14.5px] text-gray-300">
 
-                  Purchases
+{user?.role==="Buyer" && (
 
-                </Link>
+<>
 
-              </div>
+<Link to="/wishlist" className="block transition-colors hover:text-[#F3A847]">
 
-            </div>
+Wishlist
 
-          )}
+</Link>
 
-          {/* SELLER */}
+<Link to="/messages" className="block transition-colors hover:text-[#F3A847]">
 
-          {user?.role === "Seller" && (
+Messages
 
-            <div>
+</Link>
 
-              <h3 className="font-bold text-xl mb-4">
+<Link to="/purchases" className="block transition-colors hover:text-[#F3A847]">
 
-                Seller
+My Orders
 
-              </h3>
+</Link>
 
-              <div className="space-y-3 text-gray-400">
+</>
 
-                <Link
+)}
 
-                  to="/add-product"
+{user?.role==="Seller" && (
 
-                  className="block hover:text-white"
+<>
 
-                >
+<Link to="/add-product" className="block transition-colors hover:text-[#F3A847]">
 
-                  Add Product
+Sell Product
 
-                </Link>
+</Link>
 
-                <Link
+<Link to="/my-listings" className="block transition-colors hover:text-[#F3A847]">
 
-                  to="/my-listings"
+My Listings
 
-                  className="block hover:text-white"
+</Link>
 
-                >
+<Link to="/seller-dashboard" className="block transition-colors hover:text-[#F3A847]">
 
-                  My Listings
+Dashboard
 
-                </Link>
+</Link>
 
-                <Link
+</>
 
-                  to="/seller-dashboard"
+)}
 
-                  className="block hover:text-white"
+{!user && (
 
-                >
+<>
 
-                  Dashboard
+<p className="text-gray-500">
 
-                </Link>
+Login to access your dashboard.
 
-              </div>
+</p>
 
-            </div>
+</>
 
-          )}
+)}
 
-          {/* SUPPORT */}
+</div>
 
-          <div>
+</div>
 
-            <h3 className="font-bold text-xl mb-4">
+{/* SUPPORT */}
 
-              Support
+<div>
 
-            </h3>
+<h3 className="mb-5 text-[13px] font-bold uppercase tracking-[0.08em] text-gray-400">
 
-            <div className="space-y-3 text-gray-400">
+Support
 
-              <p>
+</h3>
 
-                Help Center
+<div className="space-y-3.5 text-[14.5px] text-gray-300">
 
-              </p>
+<div className="flex items-center gap-2.5 transition-colors hover:text-[#F3A847]">
 
-              <p>
+<ShieldCheck size={16}/>
 
-                Privacy Policy
+Privacy Policy
 
-              </p>
+</div>
 
-              <p>
+<div className="flex items-center gap-2.5 transition-colors hover:text-[#F3A847]">
 
-                Terms & Conditions
+<FileText size={16}/>
 
-              </p>
+Terms & Conditions
 
-              <p>
+</div>
 
-                Contact Us
+<div className="flex items-center gap-2.5 transition-colors hover:text-[#F3A847]">
 
-              </p>
+<HelpCircle size={16}/>
 
-            </div>
+Help Center
 
-          </div>
+</div>
 
-        </div>
+<div className="flex items-center gap-2.5 transition-colors hover:text-[#F3A847]">
 
-        {/* BOTTOM */}
+<PhoneCall size={16}/>
 
-        <div className="border-t border-slate-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+Contact Us
 
-          <p className="text-gray-500">
+</div>
 
-            © 2026 CampusCart
+</div>
 
-          </p>
+</div>
 
-          <p className="text-gray-500 mt-3 md:mt-0">
+</div>
 
-            Built for Students ❤️
+{/* Divider */}
 
-          </p>
+<div className="my-12 border-t border-white/[0.08]"/>
 
-        </div>
+{/* Bottom */}
 
-      </div>
+<div className="flex flex-col items-center justify-between gap-4 text-[13px] text-gray-400 md:flex-row">
 
-    </footer>
+<p>
 
-  );
+© 2026 CampusCart. All Rights Reserved.
+
+</p>
+
+<div className="flex items-center gap-1.5">
+
+Built with
+
+<Heart
+
+size={15}
+
+className="fill-red-500 text-red-500"
+
+/>
+
+for Students
+
+</div>
+
+</div>
+
+</div>
+
+</footer>
+
+);
 
 };
 

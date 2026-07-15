@@ -4,46 +4,29 @@ import Navbar from "../common/Navbar";
 import Footer from "../common/Footer";
 
 const AppLayout = () => {
-
   const location = useLocation();
 
-  const hideFooterPages = [
-    "/messages",
-  ];
+  const hideFooterPages = ["/messages"];
 
-  const hideFooter =
-    hideFooterPages.includes(
-      location.pathname
-    );
+  const hideFooter = hideFooterPages.includes(location.pathname);
 
   return (
-
-    <div className="min-h-screen flex flex-col bg-gray-50 overflow-hidden">
-
+    <div className="flex min-h-screen flex-col bg-[#FAFAFA]">
       <Navbar />
 
       <main
-        className={`flex-1 ${
+        className={
           hideFooter
             ? "h-[calc(100vh-72px)] overflow-hidden"
-            : ""
-        }`}
+            : "flex-1 min-h-[60vh]"
+        }
       >
-
         <Outlet />
-
       </main>
 
-      {!hideFooter && (
-
-        <Footer />
-
-      )}
-
+      {!hideFooter && <Footer />}
     </div>
-
   );
-
 };
 
 export default AppLayout;
