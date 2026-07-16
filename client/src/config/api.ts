@@ -11,6 +11,7 @@ export const API = {
 LOGIN: `${BASE_URL}/api/auth/login`,
 REGISTER: `${BASE_URL}/api/auth/register`,
 GOOGLE_AUTH: `${BASE_URL}/api/auth/google-auth`,
+GOOGLE_LOGIN: `${BASE_URL}/api/auth/google-login`,
 ME: `${BASE_URL}/api/auth/me`,
 
 FORGOT_PASSWORD: `${BASE_URL}/api/auth/forgot-password`,

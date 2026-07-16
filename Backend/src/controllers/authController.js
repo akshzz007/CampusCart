@@ -253,7 +253,7 @@ export const getMe = async (
     });
   }
 };
-export const googleAuth = async (
+   export const googleAuth = async (
 
 req,
 
@@ -307,8 +307,8 @@ user = await User.create({
   college: "",
   role: role || "Buyer",
   isVerified: true,
+  profileCompleted: false,
 });
-
 }
 
 /* TOKEN */
@@ -373,6 +373,42 @@ error.message,
 
 }
 
+};
+
+export const googleLogin = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Account not found. Please sign up first.",
+      });
+    }
+
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    const userData = user.toObject();
+    delete userData.password;
+
+    res.status(200).json({
+      success: true,
+      token,
+      user: userData,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
 
 /* ================= FORGOT PASSWORD ================= */

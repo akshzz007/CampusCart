@@ -47,8 +47,8 @@ const [forgotEmail, setForgotEmail] =
 
       // Try backend Google auth first
       try {
-        const res = await axios.post(API.GOOGLE_AUTH, {
-          name: result.user.displayName,
+const res = await axios.post(API.GOOGLE_LOGIN, {
+            name: result.user.displayName,
           email: result.user.email,
         });
         const userData = res.data.user;

@@ -1,3 +1,4 @@
+import API from "../../config/api";
 import { socket } from "../../socket";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -22,7 +23,7 @@ const Navbar = () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
-      const res = await axios.get("http://localhost:5000/api/messages/my-chats", {
+      const res = await axios.get(API.MY_CHATS, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const unread = res.data.chats.reduce((total: number, chat: any) => total + (chat.unread || 0), 0);

@@ -131,7 +131,7 @@ const Signup = () => {
   ) => {
     try {
       const response =await axios.post(
-  API.GOOGLE_AUTH,
+ API.GOOGLE_AUTH,
         {
           name: googleUser.displayName,
           email: googleUser.email,

@@ -5,6 +5,7 @@ import {
   loginUser,
   getMe,
   googleAuth,
+  googleLogin,
   forgotPassword,
   resetPassword,
   updateAvatar,
@@ -25,6 +26,8 @@ router.post("/login", loginUser);
 
 /* GOOGLE AUTH */
 router.post("/google-auth", googleAuth);
+router.post("/google-login", googleLogin);
+
 
 /* GET USER */
 router.get("/me", protect, getMe);

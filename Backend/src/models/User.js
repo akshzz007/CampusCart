@@ -63,7 +63,7 @@ avatar: {
 
     profileCompleted: {
   type: Boolean,
-  default: true,
+  default: false,
 },
 
 averageRating: {
