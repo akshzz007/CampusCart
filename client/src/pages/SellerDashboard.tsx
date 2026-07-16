@@ -1,3 +1,4 @@
+import API from "../config/api";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -21,7 +22,7 @@ const SellerDashboard = () => {
   const fetchStats = async () => {
     try {
       const token = localStorage.getItem("token");
-      const { data } = await axios.get("http://localhost:5000/api/products/seller/stats", {
+      const { data } = await axios.get(API.SELLER_STATS, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setStats({

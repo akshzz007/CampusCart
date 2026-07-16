@@ -1,3 +1,4 @@
+import API from "../config/api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Upload, Tag, IndianRupee,  Package, ChevronDown, X, CheckCircle } from "lucide-react";
@@ -54,8 +55,8 @@ const AddProduct = () => {
       const token = localStorage.getItem("token");
       if (!token) { toast.error("Please login first"); return; }
 
-      await axios.post(
-  "http://localhost:5000/api/products",
+   await axios.post(
+  API.PRODUCTS,
   {
     title,
     description,

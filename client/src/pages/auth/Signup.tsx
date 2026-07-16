@@ -1,3 +1,4 @@
+import API from "../../config/api";
 import colleges from "../../data/colleges.json";
 import Select from "react-select";
 import { Link, useNavigate } from "react-router-dom";
@@ -77,8 +78,8 @@ const Signup = () => {
 
       setLoading(true);
 
-      await axios.post(
-        "http://localhost:5000/api/auth/register",
+   await axios.post(
+  API.REGISTER,
         {
           name,
           email,
@@ -129,8 +130,8 @@ const Signup = () => {
     selectedRole: "Buyer" | "Seller"
   ) => {
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/google-auth",
+      const response =await axios.post(
+  API.GOOGLE_AUTH,
         {
           name: googleUser.displayName,
           email: googleUser.email,

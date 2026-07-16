@@ -1,3 +1,4 @@
+import API from "../config/api";
 import { toast } from "sonner";
 import { Send, Search, Trash2, MessageCircle } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
@@ -40,7 +41,7 @@ const productTitle = searchParams.get("productTitle");
   const fetchChats = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/messages/my-chats", {
+      const res = await axios.get(API.MY_CHATS, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const serverChats = res.data.chats;
@@ -135,7 +136,7 @@ useEffect(() => {
     const token = localStorage.getItem("token");
 
     const res = await axios.get(
-      `http://localhost:5000/api/messages/${product}/${user}`,
+     API.CONVERSATION(product, user),
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -185,7 +186,7 @@ setChats(prev =>
   const deleteMessage = async (id: string) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/messages/${id}`, {
+      await axios.delete(API.DELETE_MESSAGE(id), {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (selectedChat) await fetchMessages(selectedChat.product._id, selectedChat.user._id);
@@ -204,7 +205,7 @@ setChats(prev =>
 }
       const product = selectedChat.product._id;
       const res = await axios.post(
-        "http://localhost:5000/api/messages",
+      API.MESSAGES,
         { receiver, product, text: message },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -212,7 +213,7 @@ setChats(prev =>
 setMessage("");
 
 const updatedChats = await axios.get(
-  "http://localhost:5000/api/messages/my-chats",
+ API.MY_CHATS,
   {
     headers: {
       Authorization: `Bearer ${token}`,

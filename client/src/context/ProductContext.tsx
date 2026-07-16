@@ -1,3 +1,4 @@
+import API from "../config/api";
 import {
   createContext,
   useContext,
@@ -78,8 +79,7 @@ export const ProductProvider = ({
 
     try {
 
-      let url =
-        "http://localhost:5000/api/products";
+let url = API.PRODUCTS;
 
       if (filter === "all") {
 
@@ -144,8 +144,8 @@ export const ProductProvider = ({
           "token"
         );
 
-      await axios.post(
-        "http://localhost:5000/api/products",
+await axios.post(
+  API.PRODUCTS,
         product,
         {
           headers: {
@@ -180,8 +180,8 @@ export const ProductProvider = ({
           "token"
         );
 
-      await axios.delete(
-        `http://localhost:5000/api/products/${productId}`,
+   await axios.delete(
+  API.PRODUCT(productId),
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -216,8 +216,8 @@ export const ProductProvider = ({
           "token"
         );
 
-      await axios.put(
-        `http://localhost:5000/api/products/${productId}`,
+    await axios.put(
+  API.PRODUCT(productId),
         updatedData,
         {
           headers: {
@@ -254,8 +254,8 @@ export const ProductProvider = ({
           "token"
         );
 
-      await axios.put(
-        `http://localhost:5000/api/products/${productId}/sold`,
+     await axios.put(
+  API.PRODUCT_SOLD(productId),
         {
           buyerId: buyerId || null,
           soldPrice,
