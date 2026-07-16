@@ -62,23 +62,18 @@ const res = await axios.post(API.GOOGLE_LOGIN, {
           toast.success("Google Login Successful 🎉");
           navigate("/home");
         }
-      } catch {
-        // Fallback: create local user object
-       const user: User = {
-  _id: result.user.uid,
-  name: result.user.displayName || "User",
-  email: result.user.email || "",
-  college: "",
-  city: "",
-  state: "",
-  role: "Buyer",
-  isVerified: true,
-};
+        } catch (error: any) {
 
-        const token = await result.user.getIdToken();
-        login(user, token);
-        toast.success("Google Login! Please complete your profile.");
-        navigate("/complete-profile");
+        if (error.response?.status === 404) {
+          toast.error("Account not found. Please create an account first.");
+          navigate("/signup");
+          return;
+        }
+
+        toast.error(
+          error.response?.data?.message ||
+          "Google Login Failed"
+        );
       }
     } catch (err) {
       console.log(err);
