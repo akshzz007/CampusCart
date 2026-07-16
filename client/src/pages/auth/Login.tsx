@@ -1,4 +1,3 @@
-import type { User } from "../../types";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";

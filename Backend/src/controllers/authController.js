@@ -375,7 +375,7 @@ error.message,
 
 };
 
-export const googleLogin = async (req, res) => {
+  export const googleLogin = async (req, res) => {
   try {
     const { email } = req.body;
 
