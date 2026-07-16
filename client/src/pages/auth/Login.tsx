@@ -55,8 +55,13 @@ const handleGoogleLogin = async () => {
       });
 
       const userData = res.data.user;
-
+console.log("GOOGLE LOGIN RESPONSE:");
+console.log(userData);
+console.log("profileCompleted =", userData.profileCompleted);
       login(userData, res.data.token);
+
+console.log("Navigating...");
+
 
       // Existing user
       if (userData.profileCompleted === true) {
