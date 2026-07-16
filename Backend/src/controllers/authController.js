@@ -624,6 +624,10 @@ export const removeAvatar = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
+ 
+    console.log("===== UPDATE PROFILE =====");
+    console.log("BODY:", req.body);
+    console.log("USER:", req.user);
 
     const {
       name,
@@ -654,7 +658,8 @@ export const updateProfile = async (req, res) => {
     user.profileCompleted = true;
 
     await user.save();
-
+console.log("Saved User:");
+console.log(user);
     const userData = user.toObject();
     delete userData.password;
 
