@@ -28,13 +28,19 @@ router.post("/login", loginUser);
 router.post("/google-auth", googleAuth);
 router.post("/google-login", googleLogin);
 
-
 /* GET USER */
 router.get("/me", protect, getMe);
 
 /* UPDATE PROFILE */
 router.put(
   "/profile",
+  protect,
+  updateProfile
+);
+
+/* COMPLETE PROFILE */
+router.put(
+  "/complete-profile",
   protect,
   updateProfile
 );
