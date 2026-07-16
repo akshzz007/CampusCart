@@ -4,7 +4,8 @@ import {
   useEffect,
   useState,
 } from "react";
-
+import { signOut } from "firebase/auth";
+import { auth } from "../firebase";
 import type { ReactNode } from "react";
 import type { User } from "../types";
 
@@ -128,28 +129,23 @@ export const AuthProvider = ({
 
   };
 
-  const logout = () => {
+const logout = async () => {
 
-    setUser(null);
+  await signOut(auth);
 
-    setToken(null);
+  setUser(null);
 
-    setIsGuest(false);
+  setToken(null);
 
-    localStorage.removeItem(
-      "campuscart-user"
-    );
+  setIsGuest(false);
 
-    localStorage.removeItem(
-      "token"
-    );
+  localStorage.removeItem("campuscart-user");
 
-    localStorage.removeItem(
-      "campuscart-guest"
-    );
+  localStorage.removeItem("token");
 
-  };
+  localStorage.removeItem("campuscart-guest");
 
+};
   const setGuest = (
     value: boolean
   ) => {

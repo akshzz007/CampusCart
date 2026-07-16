@@ -42,6 +42,9 @@ const [forgotEmail, setForgotEmail] =
   const handleGoogleLogin = async () => {
     try {
       const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({
+  prompt: "select_account",
+});
       const result = await signInWithPopup(auth, provider);
 
       // Try backend Google auth first
