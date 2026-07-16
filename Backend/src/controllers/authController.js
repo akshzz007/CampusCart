@@ -624,7 +624,15 @@ export const removeAvatar = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    const { name, phone, state, city, college } = req.body;
+
+    const {
+      name,
+      phone,
+      state,
+      city,
+      college,
+      role,
+    } = req.body;
 
     const user = await User.findById(req.user.id);
 
@@ -640,6 +648,10 @@ export const updateProfile = async (req, res) => {
     user.state = state ?? user.state;
     user.city = city ?? user.city;
     user.college = college ?? user.college;
+    user.role = role ?? user.role;
+
+    // IMPORTANT
+    user.profileCompleted = true;
 
     await user.save();
 

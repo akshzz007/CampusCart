@@ -39,49 +39,53 @@ const [forgotEmail, setForgotEmail] =
     }
   };
 
-  const handleGoogleLogin = async () => {
+const handleGoogleLogin = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
+
+    provider.setCustomParameters({
+      prompt: "select_account",
+    });
+
+    const result = await signInWithPopup(auth, provider);
+
     try {
-      const provider = new GoogleAuthProvider();
-      provider.setCustomParameters({
-  prompt: "select_account",
-});
-      const result = await signInWithPopup(auth, provider);
+      const res = await axios.post(API.GOOGLE_LOGIN, {
+        email: result.user.email,
+      });
 
-      // Try backend Google auth first
-      try {
-const res = await axios.post(API.GOOGLE_LOGIN, {
-            name: result.user.displayName,
-          email: result.user.email,
-        });
-        const userData = res.data.user;
-        login(userData, res.data.token);
+      const userData = res.data.user;
 
-        // TASK 2 — if profile not completed, redirect to complete-profile
-        if (!userData.profileCompleted && (!userData.college || !userData.city)) {
-          toast.success("Google Login Successful! Please complete your profile.");
-          navigate("/complete-profile");
-        } else {
-          toast.success("Google Login Successful 🎉");
-          navigate("/home");
-        }
-        } catch (error: any) {
+      login(userData, res.data.token);
 
-        if (error.response?.status === 404) {
-          toast.error("Account not found. Please create an account first.");
-          navigate("/signup");
-          return;
-        }
-
-        toast.error(
-          error.response?.data?.message ||
-          "Google Login Failed"
-        );
+      // Existing user
+      if (userData.profileCompleted === true) {
+        toast.success("Google Login Successful 🎉");
+        navigate("/home");
+      } else {
+        toast.success("Please complete your profile.");
+        navigate("/complete-profile");
       }
-    } catch (err) {
-      console.log(err);
-      toast.error("Google Login Failed");
+
+    } catch (error: any) {
+
+      if (error.response?.status === 404) {
+        toast.error("Account not found. Please create an account first.");
+        navigate("/signup");
+        return;
+      }
+
+      toast.error(
+        error.response?.data?.message ||
+        "Google Login Failed"
+      );
     }
-  };
+
+  } catch (err) {
+    console.log(err);
+    toast.error("Google Login Failed");
+  }
+};
 
   const handleGuest = () => {
     setGuest(true);
