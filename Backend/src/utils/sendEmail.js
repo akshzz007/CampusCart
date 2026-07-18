@@ -14,12 +14,24 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendEmail = async (options) => {
-  await transporter.sendMail({
-    from: `"CampusCart" <akshras479@gmail.com>`,
-    to: options.email,
-    subject: options.subject,
-    html: options.message,
-  });
+  try {
+    console.log("Connecting Brevo...");
+
+    const info = await transporter.sendMail({
+      from: `"CampusCart" <${process.env.EMAIL_USER}>`,
+      to: options.email,
+      subject: options.subject,
+      html: options.message,
+    });
+
+    console.log("MAIL SENT ✅");
+    console.log(info);
+
+  } catch (err) {
+    console.log("BREVO ERROR ❌");
+    console.log(err);
+    throw err;
+  }
 };
 
 export default sendEmail;
